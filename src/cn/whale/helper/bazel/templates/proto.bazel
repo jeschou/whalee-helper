@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
+
+proto_library(
+    name = "${whale_dir_name}_proto_proto",
+    srcs = [${proto_files}],
+    visibility = ["//visibility:public"],
+    deps = [$!{proto_library_deps}],
+)
+
+go_proto_library(
+    name = "${whale_dir_name}_proto_go_proto",
+    compilers = ["@io_bazel_rules_go//proto:go_grpc"],
+    importpath = "${relativepath}",
+    proto = ":${whale_dir_name}_proto_proto",
+    visibility = ["//visibility:public"],
+    deps = [$!{go_proto_library_deps}],
+)
+
+go_library(
+    name = "go_default_library",
+    srcs = [${micro_files}],
+    embed = [":${whale_dir_name}_proto_go_proto"],
+    importpath = "${relativepath}",
+    visibility = ["//visibility:public"],
+    deps = [$!{go_library_deps}],
+)

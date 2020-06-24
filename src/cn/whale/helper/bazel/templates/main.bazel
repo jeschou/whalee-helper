@@ -1,0 +1,45 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_docker//container:container.bzl", "container_image", "container_push")
+load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
+
+go_library(
+    name = "go_default_library",
+    srcs = [${src_files}],
+    importpath = "${relativepath}",
+    visibility = ["//visibility:private"],
+    deps = [$!{go_library_deps}],
+)
+
+go_binary(
+    name = "${dirname}",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)
+
+# Include it in our base image as a tar.
+container_image(
+    name = "image",
+    base = "@product_golang_base//image",
+    files = [
+        ":${dirname}",
+    ],
+    mode = "0o777",
+    directory = "/",
+    cmd = [
+        "./${dirname}",
+        "$!{server_address}",
+        "$!{registry}",
+    ],
+    workdir = "/",
+    visibility = ["//visibility:private"],
+)
+
+container_push(
+    name = "push_image",
+    image = ":image",
+    format = "Docker",
+    registry = "registry-vpc.cn-shanghai.aliyuncs.com",
+    repository = "meetwhale/${dirname}",
+    visibility = ["//visibility:public"],
+    tag = "{PRODUCT_IMAGE_TAG}",
+)
