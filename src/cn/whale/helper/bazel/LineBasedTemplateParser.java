@@ -38,7 +38,7 @@ public class LineBasedTemplateParser {
     public String getResult() {
         StringBuilder stringBuilder = new StringBuilder();
         for (LineSeg lineSeg : lines) {
-            if (lineSeg.shouldRemove) {
+            if (Utils.isNotEmpty(lineSeg.paramName) && lineSeg.shouldRemove) {
                 continue;
             }
             stringBuilder.append(lineSeg.line).append("\n");
