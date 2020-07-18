@@ -2,6 +2,7 @@ package cn.whale.helper.utils;
 
 import com.intellij.openapi.vfs.VirtualFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -23,5 +24,9 @@ public class IDEUtils {
             }
         }
         return list;
+    }
+
+    public static File toFile(VirtualFile vf) {
+        return new File(vf.getPath());
     }
 }

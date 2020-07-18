@@ -109,8 +109,6 @@ public class ProtocAction extends AnAction {
             return;
         }
 
-        sourcePath();
-
         if (isProtoSourceFile(virtualFile)) {
             Editor editor = event.getData(PlatformDataKeys.EDITOR);
             if (editor != null) {

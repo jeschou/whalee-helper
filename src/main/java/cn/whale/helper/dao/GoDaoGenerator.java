@@ -57,7 +57,7 @@ public class GoDaoGenerator {
         List<VirtualFile> fs = IDEUtils.collectChild(targetDir, IDEUtils::isGoFile);
         if (!fs.isEmpty()) {
             try {
-                String packageName0 = GoUtils.getPackage(new File(fs.get(0).getPath()), true);
+                String packageName0 = GoUtils.getPackage(IDEUtils.toFile(fs.get(0)), true);
                 if (packageName0 != null) {
                     packageName = packageName0;
                 }
