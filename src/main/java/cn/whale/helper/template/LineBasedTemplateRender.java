@@ -1,4 +1,4 @@
-package cn.whale.helper.bazel;
+package cn.whale.helper.template;
 
 import cn.whale.helper.utils.Utils;
 
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LineBasedTemplateParser {
+public class LineBasedTemplateRender {
     static String FULL_LINE_PARAM_START = "$!{";
     static String NORMAL_PARAM_START = "${";
     static String PARAM_END = "}";
@@ -24,7 +24,7 @@ public class LineBasedTemplateParser {
         }
     }
 
-    public void parse(Map<String, String> params) {
+    public void render(Map<String, String> params) {
         params.forEach((k, v) -> {
             List<LineSeg> ps = paramMap.get(k);
             if (ps != null) {

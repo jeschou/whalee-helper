@@ -1,1 +1,0 @@
-# whgo helper

@@ -1,6 +1,7 @@
 package cn.whale.helper.bazel;
 
 import cn.whale.helper.bazel.model.BazelBuild;
+import cn.whale.helper.template.LineBasedTemplateRender;
 import cn.whale.helper.ui.Notifier;
 import cn.whale.helper.utils.GoUtils;
 import cn.whale.helper.utils.Utils;
@@ -72,9 +73,9 @@ public abstract class AbstractBazelGenerator {
 
     protected abstract String getTemplateName();
 
-    protected LineBasedTemplateParser loadTemplate() throws IOException {
+    protected LineBasedTemplateRender loadTemplate() throws IOException {
         InputStream is = AbstractBazelGenerator.class.getResourceAsStream("./templates/" + getTemplateName() + ".bazel");
-        LineBasedTemplateParser templ = new LineBasedTemplateParser();
+        LineBasedTemplateRender templ = new LineBasedTemplateRender();
         templ.loadTemplate(is);
         return templ;
     }
@@ -119,10 +120,10 @@ public abstract class AbstractBazelGenerator {
 //            template.parse(prepareTemplateParam());
 //            Utils.writeFile(bazelFile, template.getResult());
 //        }
-        LineBasedTemplateParser template = loadTemplate();
+        LineBasedTemplateRender template = loadTemplate();
 
-        template.parse(prepareCommonParam());
-        template.parse(prepareTemplateParam());
+        template.render(prepareCommonParam());
+        template.render(prepareTemplateParam());
         Utils.writeFile(bazelFile, template.getResult());
 
 

@@ -17,6 +17,55 @@ public class Utils {
         return str != null && str.length() != 0;
     }
 
+    public static boolean isEmpty(String str) {
+        return str == null || str.length() == 0;
+    }
+
+    public static boolean isNoneEmpty(String... strs) {
+        for (String s : strs) {
+            if (s == null || s.length() == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isAnyEmpty(String... strs) {
+        for (String s : strs) {
+            if (s == null || s.length() == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static String toTitle(String str) {
+        if (isEmpty(str)) return str;
+        return Character.toTitleCase(str.charAt(0)) + str.substring(1);
+    }
+
+    public static String unTitle(String str) {
+        if (isEmpty(str)) return str;
+        return Character.toLowerCase(str.charAt(0)) + str.substring(1);
+    }
+
+    public static String toTitleCamelCase(String cn) {
+        String[] segs = cn.split("_+");
+        for (int i = 0; i < segs.length; i++) {
+            segs[i] = toTitle(segs[i]);
+        }
+        return join(segs, 0, segs.length, "");
+    }
+
+    public static Object[] pluck(Object[][] arr2, int col) {
+        Object[] arr = new Object[arr2.length];
+        for (int i = 0; i < arr2.length; i++) {
+            arr[i] = arr2[i][col];
+        }
+        return arr;
+    }
+
+
     public static String readText(InputStream is) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {

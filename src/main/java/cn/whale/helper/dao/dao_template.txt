@@ -1,0 +1,24 @@
+package ${package}
+
+import ($!{imports})
+
+type ${StructName} struct {
+${structFields}
+}
+
+func (do *${StructName}) TableName() string {
+    return "${tableName}"
+}
+
+type ${structName}Dao struct {
+    db *gorm.DB
+}
+
+func Load${StructName}Dao(db *gorm.DB) *${structName}Dao {
+    return &${structName}Dao{db: db}
+}
+
+func (dao *${structName}Dao) Create(do *${StructName}) (*${StructName}, error) {
+    err := dao.db.Create(do).Error
+    return do, err
+}

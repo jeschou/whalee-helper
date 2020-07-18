@@ -9,9 +9,9 @@ import static cn.whale.helper.bazel.model.BazelBuild.INDENT;
 
 public class Def {
     public Load loadRef;
-    String comment = "";
     public String name = "";
     public List<Param> params = new ArrayList<>();
+    String comment = "";
 
     public Def(String s) {
         this.name = s;

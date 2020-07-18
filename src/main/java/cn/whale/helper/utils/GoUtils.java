@@ -50,4 +50,18 @@ public class GoUtils {
         });
         return imports;
     }
+
+    public static String getPackage(File f, boolean trim_test) throws IOException {
+        String packageLine = Utils.readFirstLine(f, s -> s.startsWith("package "));
+        if (packageLine == null) {
+            return null;
+        }
+        String packageName = packageLine.substring(8).trim();
+        if (trim_test) {
+            if (packageName.endsWith("_test")) {
+                packageName = packageName.substring(0, packageName.length() - 5);
+            }
+        }
+        return packageName;
+    }
 }

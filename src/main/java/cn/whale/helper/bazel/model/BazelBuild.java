@@ -51,7 +51,7 @@ public class BazelBuild {
         }
         Load load0 = loadList.get(0);
         load0.defs.add(gotest);
-        gotest.loadRef=load0;
+        gotest.loadRef = load0;
 
         int maxIndex0 = 1;
 

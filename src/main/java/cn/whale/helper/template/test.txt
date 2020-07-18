@@ -1,0 +1,12 @@
+top0
+#if $!{show1}
+content11
+
+#if $!{show2}
+content21
+content22
+#fi
+content12
+#fi
+top1
+top2

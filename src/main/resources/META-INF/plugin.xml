@@ -1,11 +1,11 @@
 <idea-plugin>
     <id>com.meetwhale.whgo.project.helper</id>
-    <name>Whgo project helper</name>
+    <name>Whale Engineer Helper</name>
     <version>1.0-beta</version>
     <vendor email="shengyangzhou@whale.im" url="http://www.meetwhale.com">Whale</vendor>
 
     <description><![CDATA[
-      whgo project helper, 辅助开发人员提高效率. 主要特性包括 bazel 辅助, proto 辅助 等
+      whale engineer helper, 辅助开发人员提高效率. 主要特性包括 bazel 辅助, proto 辅助 等
     ]]></description>
 
     <change-notes><![CDATA[
@@ -29,8 +29,8 @@
     <actions>
 
 
-        <action id="NewGormModelAction" class="cn.whale.helper.action.NewGormModelAction" text="NewGormModelAction"
-                description="NewGormModelAction">
+        <action id="NewGormModelAction" class="cn.whale.helper.action.NewGormModelAction" text="New Gorm DAO"
+                description="Create gorm DAO from database table">
             <add-to-group group-id="NewGroup" anchor="last"/>
         </action>
         <action id="BazelGenAction" class="cn.whale.helper.action.BazelUpdateAction" text="Update BUILD.bazel"
