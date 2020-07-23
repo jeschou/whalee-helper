@@ -50,21 +50,6 @@ public class ProtocAction extends AnAction {
         return "proto".equalsIgnoreCase(vf.getExtension());
     }
 
-    /**
-     * do this before call protoc
-     *
-     * @return
-     */
-    static String sourcePath() {
-
-        File bashProfileFile = new File(System.getProperty("user.home"), ".bash_profile");
-        if (!bashProfileFile.isFile()) {
-            return "";
-        }
-
-        return "source " + bashProfileFile.getAbsolutePath() + " && ";
-    }
-
     static boolean isSubOrEqual(File base, File f) {
         return f.toPath().startsWith(base.toPath());
     }
@@ -166,17 +151,15 @@ public class ProtocAction extends AnAction {
 
             cmd = String.format(cmd, arg, outPathRelative, outPathRelative);
 
-            System.out.println("working dir: " + cmdDir);
-            System.out.println("exec cmd: " + cmd);
-
-
             ProcessBuilder processBuilder = new ProcessBuilder();
 
             processBuilder.directory(cmdDir);
             if (Utils.isWindows()) {
                 processBuilder.command("cmd.exe", "/C", cmd);
             } else {
-                processBuilder.command("bash", "-c", sourcePath() + cmd);
+                File f = createTempShell(cmd);
+                String sh = Utils.getLoginShell();
+                processBuilder.command(sh, "-i", f.getAbsolutePath());
             }
             Process process = processBuilder.start();
             String normalContent = Utils.readText(process.getInputStream());
@@ -198,4 +181,9 @@ public class ProtocAction extends AnAction {
         }
     }
 
+    static File createTempShell(String cmd) throws IOException {
+        File f = File.createTempFile("whalee_helper_protoc", ".sh");
+        Utils.writeFile(f, cmd);
+        return f;
+    }
 }

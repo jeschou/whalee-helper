@@ -25,6 +25,12 @@ processResources {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    localPath '/Applications/GoLand.app'
+    //localPath '/Applications/GoLand.app'
+    localPath '/Applications/IntelliJ IDEA CE.app'
     //version '2020.1'
+}
+
+patchPluginXml {
+    sinceBuild "173.0"
+    untilBuild null
 }

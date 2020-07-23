@@ -13,6 +13,13 @@ import java.util.function.Predicate;
 
 public class Utils {
 
+    public static String trimToEmpty(String str) {
+        if (str == null) {
+            return "";
+        }
+        return str.trim();
+    }
+
     public static boolean isNotEmpty(String str) {
         return str != null && str.length() != 0;
     }
@@ -175,11 +182,21 @@ public class Utils {
     }
 
     public static String substringBefore(String str, String sep) {
+        if(str==null) return null;
         int idx = str.indexOf(sep);
         if (idx == -1) {
             return str;
         }
         return str.substring(0, idx);
+    }
+
+    public static String substringAfter(String str, String sep) {
+        if(str==null) return null;
+        int idx = str.indexOf(sep);
+        if (idx == -1) {
+            return str;
+        }
+        return str.substring(idx + sep.length());
     }
 
     public static String relativePath(File root, File f) {
@@ -285,5 +302,20 @@ public class Utils {
 
     public static boolean isMac() {
         return System.getProperty("os.name").toLowerCase().contains("mac");
+    }
+
+    public static String getLoginShell() {
+        try {
+            String home = System.getProperty("user.home");
+            Process proc = Runtime.getRuntime().exec("dscl . -read " + home + " UserShell");
+            String text = Utils.trimToEmpty(Utils.readText(proc.getInputStream()));
+            String sh = Utils.trimToEmpty(Utils.substringAfter(text, ":"));
+            if (Utils.isNotEmpty(sh)) {
+                return sh;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "/bin/bash";
     }
 }

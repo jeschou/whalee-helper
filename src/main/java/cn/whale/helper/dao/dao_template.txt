@@ -14,7 +14,7 @@ type ${structName}Dao struct {
     db *gorm.DB
 }
 
-func Load${StructName}Dao(db *gorm.DB) *${structName}Dao {
+func New${StructName}Dao(db *gorm.DB) *${structName}Dao {
     return &${structName}Dao{db: db}
 }
 
