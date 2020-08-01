@@ -13,6 +13,16 @@ import java.util.function.Predicate;
 
 public class Utils {
 
+    public static String splitAndGet(String str, String sep, int idx) {
+        if (str == null || sep == null) return null;
+        String[] segs = str.split(sep);
+        if (idx < 0) idx += segs.length;
+        if (idx >= 0 && idx < segs.length) {
+            return segs[idx];
+        }
+        return null;
+    }
+
     public static String trimToEmpty(String str) {
         if (str == null) {
             return "";
@@ -182,7 +192,7 @@ public class Utils {
     }
 
     public static String substringBefore(String str, String sep) {
-        if(str==null) return null;
+        if (str == null) return null;
         int idx = str.indexOf(sep);
         if (idx == -1) {
             return str;
@@ -191,7 +201,7 @@ public class Utils {
     }
 
     public static String substringAfter(String str, String sep) {
-        if(str==null) return null;
+        if (str == null) return null;
         int idx = str.indexOf(sep);
         if (idx == -1) {
             return str;

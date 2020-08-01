@@ -1,6 +1,7 @@
 package cn.whale.helper.bazel;
 
 import cn.whale.helper.utils.ProtoUtil;
+import cn.whale.helper.utils.Utils;
 import com.intellij.openapi.project.Project;
 
 import java.io.File;
@@ -56,6 +57,10 @@ public class ProtoGenerator extends AbstractBazelGenerator {
             if (go_package == null) {
                 System.out.println(pf + " has no go_package declare");
                 continue;
+            }
+            if (go_package.length == 1) {
+                // 兼容逻辑
+                go_package = new String[]{go_package[0], Utils.splitAndGet(go_package[0], "/", -1)};
             }
             String dep = go_package[0].replace(projectModuleName, "/") + ":" + go_package[1] + "_proto";
 
