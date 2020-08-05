@@ -57,6 +57,12 @@
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
 
+        <action id="BazelGenAction_popup" class="cn.whale.helper.action.BazelUpdateAction" text="Update BUILD.bazel"
+                icon="PluginIcons.BAZEL"
+                description="BazelGenAction desc">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+
     </actions>
 
 </idea-plugin>
