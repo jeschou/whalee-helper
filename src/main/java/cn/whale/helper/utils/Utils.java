@@ -174,7 +174,9 @@ public class Utils {
 
     public static String substrBetweenQuote(String str) {
         int idx0 = str.indexOf('"');
+        if (idx0 == -1) return null;
         int idx1 = str.lastIndexOf('"');
+        if (idx1 == -1) return null;
         return str.substring(idx0 + 1, idx1);
     }
 

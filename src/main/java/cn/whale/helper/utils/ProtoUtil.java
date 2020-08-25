@@ -9,7 +9,9 @@ public class ProtoUtil {
         List<String> lines = Utils.readLines(f, "import ");
         List<String> imports = new ArrayList<>(lines.size());
         for (String l : lines) {
-            imports.add(Utils.substrBetweenQuote(l));
+            String p = Utils.substrBetweenQuote(l);
+            if (Utils.isNotEmpty(p))
+                imports.add(p);
         }
         Collections.sort(imports);
         return imports;

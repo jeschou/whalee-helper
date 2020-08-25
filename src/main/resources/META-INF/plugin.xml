@@ -62,6 +62,11 @@
                 description="BazelGenAction desc">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
+        <action id="BazelGenAction_popup2" class="cn.whale.helper.action.BazelUpdateAction" text="Update BUILD.bazel"
+                icon="PluginIcons.BAZEL"
+                description="BazelGenAction desc">
+            <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>
+        </action>
 
     </actions>
 
