@@ -10,7 +10,7 @@ public class ProtoUtil {
         List<String> imports = new ArrayList<>(lines.size());
         for (String l : lines) {
             String p = Utils.substrBetweenQuote(l);
-            if (Utils.isNotEmpty(p))
+            if (Utils.isNotEmpty(p) && !p.startsWith("google/"))
                 imports.add(p);
         }
         Collections.sort(imports);
