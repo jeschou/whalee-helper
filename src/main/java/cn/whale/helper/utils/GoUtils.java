@@ -14,10 +14,10 @@ public class GoUtils {
         List<String> imports = new ArrayList<>();
 
         for (String line : Utils.readLinesBefore(f, IMPORT_BREAK)) {
-            if(line.startsWith("//")) continue;
+            if (line.startsWith("//")) continue;
             if (line.endsWith("\"")) {
                 String import_ = Utils.substrBetweenQuote(line);
-                if (import_.contains(".") || import_.contains(projectModuleName)) {
+                if (Utils.containsAny(import_, ".", projectModuleName)) {
                     imports.add(import_);
                 }
             }

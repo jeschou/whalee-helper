@@ -13,6 +13,12 @@ import java.util.function.Predicate;
 
 public class Utils {
 
+    /**
+     * @param str null safe
+     * @param sep null safe, regexp
+     * @param idx like python, can be negative, -1 means the last. no IndexOutOfBoundsException
+     * @return
+     */
     public static String splitAndGet(String str, String sep, int idx) {
         if (str == null || sep == null) return null;
         String[] segs = str.split(sep);
@@ -31,7 +37,7 @@ public class Utils {
     }
 
     public static boolean isNotEmpty(String str) {
-        return str != null && str.length() != 0;
+        return !isEmpty(str);
     }
 
     public static boolean isEmpty(String str) {
@@ -40,7 +46,7 @@ public class Utils {
 
     public static boolean isNoneEmpty(String... strs) {
         for (String s : strs) {
-            if (s == null || s.length() == 0) {
+            if (isEmpty(s)) {
                 return false;
             }
         }
@@ -49,7 +55,22 @@ public class Utils {
 
     public static boolean isAnyEmpty(String... strs) {
         for (String s : strs) {
-            if (s == null || s.length() == 0) {
+            if (isEmpty(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param str if empty, return false
+     * @param arr empty element will be skip
+     * @return
+     */
+    public static boolean containsAny(String str, String... arr) {
+        if (isEmpty(str)) return false;
+        for (String s : arr) {
+            if (isNotEmpty(s) && str.contains(s)) {
                 return true;
             }
         }
@@ -193,8 +214,14 @@ public class Utils {
         return list;
     }
 
+    /**
+     * @param str
+     * @param sep if empty or not found, return str
+     * @return
+     */
     public static String substringBefore(String str, String sep) {
         if (str == null) return null;
+        if (isEmpty(sep)) return str;
         int idx = str.indexOf(sep);
         if (idx == -1) {
             return str;
@@ -202,8 +229,14 @@ public class Utils {
         return str.substring(0, idx);
     }
 
+    /**
+     * @param str
+     * @param sep if empty or not found, return str
+     * @return
+     */
     public static String substringAfter(String str, String sep) {
         if (str == null) return null;
+        if (isEmpty(sep)) return str;
         int idx = str.indexOf(sep);
         if (idx == -1) {
             return str;
@@ -299,6 +332,8 @@ public class Utils {
             moduleDeclareLine = readFirstLine(new File(projectRoot, "go.mod"), (s) -> s.startsWith("module "));
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        if (moduleDeclareLine == null) {
             return "whgo";
         }
         return moduleDeclareLine.trim().split(" ")[1];
