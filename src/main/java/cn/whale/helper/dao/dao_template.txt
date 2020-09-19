@@ -11,14 +11,51 @@ func (do *${StructName}) TableName() string {
 }
 
 type ${structName}Dao struct {
-    db *gorm.DB
 }
 
-func New${StructName}Dao(db *gorm.DB) *${structName}Dao {
-    return &${structName}Dao{db: db}
+var (
+    tm${Database}            = transaction.NewTransactionManager("${serviceName}", "${database}")
+    ${structName}DaoInstance *${structName}Dao
+    ${structName}DaoLock     sync.Mutex
+)
+
+func New${StructName}Dao() *${structName}Dao {
+    if ${structName}DaoInstance != nil {
+        return ${structName}DaoInstance
+    }
+    ${structName}DaoLock.Lock()
+    defer ${structName}DaoLock.Unlock();
+
+    if ${structName}DaoInstance != nil {
+        return ${structName}DaoInstance
+    }
+    ${structName}DaoInstance = new(${structName}Dao)
+    return ${structName}DaoInstance
 }
 
-func (dao *${structName}Dao) Create(do *${StructName}) (*${StructName}, error) {
-    err := dao.db.Create(do).Error
-    return do, err
+func (dao *${structName}Dao) Create(ctx context.Context, do *${StructName}) error {
+    conn := tm${Database}.GetDb(ctx)
+    if conn == nil {
+        return errors.New("can not get db connection")
+    }
+    err := conn.Create(do).Error
+    return err
+}
+
+func (dao *${structName}Dao) Update(ctx context.Context, do *${StructName}) error {
+    conn := tm${Database}.GetDb(ctx)
+    if conn == nil {
+        return errors.New("can not get db connection")
+    }
+    err := conn.Model(new(${StructName})).Where("id = ?", do.Id).Updates(do).Error
+    return err
+}
+
+func (dao *${structName}Dao) DeleteById(ctx context.Context, id interface{}) error {
+    conn := tm${Database}.GetDb(ctx)
+    if conn == nil {
+        return errors.New("can not get db connection")
+    }
+    err := conn.Where("id = ?", id).Delete(new(${StructName})).Error
+    return err
 }

@@ -2,6 +2,9 @@ package cn.whale.helper.utils;
 
 import java.util.function.BinaryOperator;
 
+/**
+ * use for stream api, reduce
+ */
 public class Joiner implements BinaryOperator<String> {
 
     private final String sep;

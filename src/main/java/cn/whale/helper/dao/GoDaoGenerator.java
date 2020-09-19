@@ -2,6 +2,8 @@ package cn.whale.helper.dao;
 
 import cn.whale.helper.template.SimpleTemplateRender;
 import cn.whale.helper.ui.Notifier;
+import cn.whale.helper.ui.TableRowData;
+import cn.whale.helper.utils.DbConfig;
 import cn.whale.helper.utils.GoUtils;
 import cn.whale.helper.utils.IDEUtils;
 import cn.whale.helper.utils.Utils;
@@ -21,20 +23,25 @@ public class GoDaoGenerator {
     private VirtualFile selectedFile;
 
     private String fileName;
+    private String database;
     private String tableName;
     private String structName;
-    private List<Object[]> fields;
+    private List<TableRowData> fields;
 
-    public GoDaoGenerator(Project project, VirtualFile selectedFile, String fileName, String tableName, String structName, List<Object[]> fields) {
+    private DbConfig dbConfig;
+
+    public GoDaoGenerator(Project project, VirtualFile selectedFile, DbConfig dbConfig, String fileName, String database, String tableName, String structName, List<TableRowData> fields) {
         this.project = project;
         this.selectedFile = selectedFile;
         this.fileName = fileName;
+        this.database = database;
         this.tableName = tableName;
         this.structName = structName;
         this.fields = fields;
         if (!this.fileName.endsWith(".go")) {
             this.fileName = fileName + ".go";
         }
+        this.dbConfig = dbConfig;
     }
 
     public void generate() {
@@ -69,6 +76,14 @@ public class GoDaoGenerator {
         params.put("structName", Utils.unTitle(structName));
         params.put("StructName", Utils.toTitle(structName));
         params.put("tableName", tableName);
+        params.put("database", database);
+        params.put("Database", Utils.toTitleCamelCase(database));
+        if ("common".equals(dbConfig.serviceName)){
+            params.put("serviceName", "");
+        }
+        if(dbConfig.database.equals(database)) {
+            params.put("database", "");
+        }
 
         StringBuilder impsSb = new StringBuilder();
         List<String> imps = collectImport();
@@ -81,14 +96,14 @@ public class GoDaoGenerator {
 
         int maxFieldWidth = 0;
         int maxTypeWidth = 0;
-        for (Object[] segs : fields) {
-            maxFieldWidth = Math.max(maxFieldWidth, ((String) segs[3]).length());
-            maxTypeWidth = Math.max(maxTypeWidth, ((String) segs[4]).length());
+        for (TableRowData trd : fields) {
+            maxFieldWidth = Math.max(maxFieldWidth, trd.fieldName.length());
+            maxTypeWidth = Math.max(maxTypeWidth,trd.goType.length());
         }
 
         StringBuilder fieldsSb = new StringBuilder();
-        for (Object[] segs : fields) {
-            fieldsSb.append("\t").append(String.format("%-" + maxFieldWidth + "s %-" + maxTypeWidth + "s %s", segs[3], segs[4], segs[5])).append("\n");
+        for (TableRowData trd : fields) {
+            fieldsSb.append("\t").append(String.format("%-" + maxFieldWidth + "s %-" + maxTypeWidth + "s %s", trd.fieldName, trd.goType, trd.tag)).append("\n");
         }
         if (fieldsSb.length() > 0) {
             fieldsSb.deleteCharAt(fieldsSb.length() - 1);
@@ -110,13 +125,16 @@ public class GoDaoGenerator {
 
     private List<String> collectImport() {
         Set<String> sets = new HashSet<>();
-        sets.add("github.com/jinzhu/gorm");
-        for (Object[] segs : fields) {
-            String goType = (String) segs[4];
+        sets.add("context");
+        sets.add("errors");
+        sets.add("sync");
+        sets.add("whgo/product/library/transaction");
+        for (TableRowData trd : fields) {
+            String goType = trd.goType;
             if (goType.contains("time.")) {
                 sets.add("time");
             }
-            if (goType.contains("pg.StringArray")) {
+            if (goType.contains("pq.")) {
                 sets.add("github.com/lib/pq");
             }
             if (goType.contains("postgres.")) {
@@ -124,7 +142,7 @@ public class GoDaoGenerator {
             }
         }
         ArrayList<String> imps = new ArrayList<>(sets);
-        Collections.sort(imps);
+        GoUtils.sortGoImport(imps);
         return imps;
     }
 }

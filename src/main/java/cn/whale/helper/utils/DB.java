@@ -30,22 +30,30 @@ public class DB {
         PG_GO_TYPE.put("float4", "float32");
         PG_GO_TYPE.put("float8", "float64");
         PG_GO_TYPE.put("bool", "bool");
-        PG_GO_TYPE.put("_varchar", "pg.StringArray");
+        PG_GO_TYPE.put("_varchar", "pq.StringArray");
+        PG_GO_TYPE.put("_int", "pq.Int64Array");
+        PG_GO_TYPE.put("_int2", "pq.Int64Array");
+        PG_GO_TYPE.put("_int4", "pq.Int64Array");
+        PG_GO_TYPE.put("_int8", "pq.Int64Array");
+        PG_GO_TYPE.put("_float4", "pq.Float64Array");
+        PG_GO_TYPE.put("_float8", "pq.Float64Array");
         PG_GO_TYPE.put("jsonb", "postgres.Jsonb");
         PG_GO_TYPE.put("json", "string");
+        PG_GO_TYPE.put("date", "*time.Time");
         PG_GO_TYPE.put("timestamp", "*time.Time");
+        PG_GO_TYPE.put("timestamptz", "*time.Time");
     }
 
-    public static Connection getConnection(String database) {
+    public static Connection getConnection(DbConfig config, String database) {
         try {
-            return DriverManager.getConnection("jdbc:postgresql://postgres.develop.meetwhale.com:5432/" + database, username, password);
+            return DriverManager.getConnection(String.format("jdbc:postgresql://%s:%s/%s", config.host, config.port, database), config.user, config.password);
         } catch (SQLException throwables) {
             throw new RuntimeException(throwables);
         }
     }
 
-    static int doWithSql(ResultSetHandler resultSetHandler, String database, String sql, Object... args) {
-        try (Connection conn = getConnection(database); PreparedStatement ps = conn.prepareStatement(sql)) {
+    static int doWithSql(ResultSetHandler resultSetHandler, DbConfig config, String database, String sql, Object... args) {
+        try (Connection conn = getConnection(config, database); PreparedStatement ps = conn.prepareStatement(sql)) {
             for (int i = 0; i < args.length; i++) {
                 ps.setObject(i + 1, args[i]);
             }
@@ -97,27 +105,28 @@ public class DB {
         }
     }
 
-    public static List<String> getDatabases() {
+    public static List<String> getDatabases(DbConfig config) {
         final List<String> list = new ArrayList<>();
         doWithSql((rs, cnames) -> {
             list.add(rs.getString(1));
-        }, "", "select datname from pg_database");
+        }, config, "", "select datname from pg_database");
         Collections.sort(list);
         return list;
     }
 
-    public static List<String> getTables(String database) {
+
+    public static List<String> getTables(DbConfig config, String database) {
         final List<String> list = new ArrayList<>();
         doWithSql((rs, cnames) -> {
             list.add(rs.getString(1));
-        }, database, "select tablename from pg_tables where schemaname='public'");
+        }, config, database, "select tablename from pg_tables where schemaname='public'");
         Collections.sort(list);
         return list;
     }
 
-    public static List<Column> getColumns(String database, String table) {
+    public static List<Column> getColumns(DbConfig config, String database, String table) {
         final List<Column> list = new ArrayList<>();
-        try (Connection conn = DB.getConnection(database)) {
+        try (Connection conn = DB.getConnection(config, database)) {
             ResultSet rs = conn.getMetaData().getColumns(null, "public", table, "%");
             handleResultSet(rs, (rs0, cnames) -> {
                 Column col = new Column();
@@ -138,15 +147,6 @@ public class DB {
         return list;
     }
 
-    public static void main(String[] args) throws Exception {
-
-
-        List<Column> columnList = getColumns("mango", "mango_shop");
-        for (Column column : columnList) {
-            System.out.println(column);
-        }
-    }
-
     public static String pgToGoType(String pGtype) {
         return PG_GO_TYPE.getOrDefault(pGtype, "string");
     }
@@ -156,8 +156,17 @@ public class DB {
     }
 
     public static class Column {
+        /**
+         * column name
+         */
         public String name;
+        /**
+         * sql type
+         */
         public int type;
+        /**
+         * column type name
+         */
         public String typeName;
         public boolean isPk;
         public String comment;

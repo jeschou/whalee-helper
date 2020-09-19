@@ -40,6 +40,11 @@ public class GoUtils {
             }
         }
 
+        sortGoImport(imports);
+        return imports;
+    }
+
+    public static void sortGoImport(List<String> imports){
         imports.sort((a, b) -> {
             if (a.contains(".") && !b.contains(".")) {
                 return 1;
@@ -49,7 +54,6 @@ public class GoUtils {
             }
             return a.compareTo(b);
         });
-        return imports;
     }
 
     public static String getPackage(File f, boolean trim_test) throws IOException {

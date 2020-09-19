@@ -3,6 +3,8 @@ package cn.whale.helper.utils;
 import com.intellij.openapi.project.Project;
 
 import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -234,10 +236,40 @@ public class Utils {
      * @param sep if empty or not found, return str
      * @return
      */
+    public static String substringBeforeLast(String str, String sep) {
+        if (str == null) return null;
+        if (isEmpty(sep)) return str;
+        int idx = str.lastIndexOf(sep);
+        if (idx == -1) {
+            return str;
+        }
+        return str.substring(0, idx);
+    }
+
+    /**
+     * @param str
+     * @param sep if empty or not found, return str
+     * @return
+     */
     public static String substringAfter(String str, String sep) {
         if (str == null) return null;
         if (isEmpty(sep)) return str;
         int idx = str.indexOf(sep);
+        if (idx == -1) {
+            return str;
+        }
+        return str.substring(idx + sep.length());
+    }
+
+    /**
+     * @param str
+     * @param sep if empty or not found, return str
+     * @return
+     */
+    public static String substringAfterLast(String str, String sep) {
+        if (str == null) return null;
+        if (isEmpty(sep)) return str;
+        int idx = str.lastIndexOf(sep);
         if (idx == -1) {
             return str;
         }
@@ -364,5 +396,46 @@ public class Utils {
             e.printStackTrace();
         }
         return "/bin/bash";
+    }
+
+    /**
+     * only work with public field
+     */
+    public static <T> T getFieldValue(Object obj, String fieldName) {
+        try {
+            Field f = obj.getClass().getField(fieldName);
+            return (T) f.get(obj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * only work with public field
+     */
+    public static void setFieldValue(Object obj, String fieldName, Object val) {
+        try {
+            Field f = obj.getClass().getField(fieldName);
+            f.set(obj, val);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * only work with public field
+     */
+    public static void copyByField(Object toObj, Object fromObj) {
+        try {
+            Field[] fs = fromObj.getClass().getFields();
+            for (Field f : fs) {
+                int md = f.getModifiers();
+                if (!Modifier.isPublic(md) || Modifier.isStatic(md)) continue;
+                setFieldValue(toObj, f.getName(), f.get(fromObj));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

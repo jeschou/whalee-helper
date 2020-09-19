@@ -32,7 +32,7 @@ public class NewGormModelAction extends AnAction {
             return;
         }
 
-        new GoDaoGenerator(project, virtualFile, dialog.getFileName(), dialog.getTableName(), dialog.getStructName(), dialog.getColumnData()).generate();
+        new GoDaoGenerator(project, virtualFile, dialog.getDbConfig(), dialog.getFileName(), dialog.getDatabase(), dialog.getTableName(), dialog.getStructName(), dialog.getColumnData()).generate();
 
     }
 }
