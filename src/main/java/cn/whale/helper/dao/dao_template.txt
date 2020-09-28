@@ -14,22 +14,15 @@ type ${structName}Dao struct {
 }
 
 var (
-    tm${Database}            = transaction.NewTransactionManager("${serviceName}", "${database}")
+    tm${Database}                = transaction.NewTransactionManager("${serviceName}", "${database}")
     ${structName}DaoInstance *${structName}Dao
-    ${structName}DaoLock     sync.Mutex
+    ${structName}DaoOnce     sync.Once
 )
 
 func New${StructName}Dao() *${structName}Dao {
-    if ${structName}DaoInstance != nil {
-        return ${structName}DaoInstance
-    }
-    ${structName}DaoLock.Lock()
-    defer ${structName}DaoLock.Unlock();
-
-    if ${structName}DaoInstance != nil {
-        return ${structName}DaoInstance
-    }
-    ${structName}DaoInstance = new(${structName}Dao)
+    ${structName}DaoOnce.Do(func() {
+        ${structName}DaoInstance = new(${structName}Dao)
+    })
     return ${structName}DaoInstance
 }
 
