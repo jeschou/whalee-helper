@@ -19,7 +19,7 @@ var (
     ${structName}DaoOnce     sync.Once
 )
 
-func New${StructName}Dao() *${structName}Dao {
+func Load${StructName}Dao() *${structName}Dao {
     ${structName}DaoOnce.Do(func() {
         ${structName}DaoInstance = new(${structName}Dao)
     })
