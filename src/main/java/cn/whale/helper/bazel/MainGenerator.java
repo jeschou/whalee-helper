@@ -38,7 +38,19 @@ public class MainGenerator extends BasicGenerator {
             param.put("server_address", "");
             param.put("registry", "");
         }
+        param.put("cfg", getCfgYamls());
         return param;
+    }
+
+    String getCfgYamls() {
+        File cfgDir = new File(dir, "cfg");
+        if (cfgDir.isDirectory()) {
+            String[] fs = cfgDir.list((dir, name) -> name.endsWith(".yaml"));
+            if (fs != null && fs.length > 0) {
+                return fs[0];
+            }
+        }
+        return null;
     }
 
     @Override

@@ -16,12 +16,34 @@ go_binary(
     visibility = ["//visibility:public"],
 )
 
+#if $!{cfg}
+filegroup(
+    name = "conf_file",
+    srcs = glob([
+        "cfg/*.yaml",
+    ]),
+    visibility = ["//visibility:public"],
+)
+
+pkg_tar(
+    name = "conf_tar",
+    srcs = [":conf_file"],
+    mode = "0o644",
+)
+
+#fi
 # Include it in our base image as a tar.
 container_image(
     name = "image",
     base = "@product_golang_base//image",
+#if $!{cfg}
+    tars = [":conf_tar"],
+#fi
     files = [
         ":${dirname}",
+#if $!{cfg}
+        "//product/library/cfg:cfg_conf_file",
+#fi
     ],
     mode = "0o777",
     directory = "/",
