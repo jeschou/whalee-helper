@@ -29,14 +29,13 @@ import java.util.List;
 import java.util.Map;
 
 public class TableSelector extends JPanel {
+    static Notifier notifier = new Notifier("whgo_helper dao-gen");
     public ComboBox<String> serviceCombox;
     public ComboBox<String> databaseCombox;
     public ComboBox<String> tableCombox;
     public JBTextField daoNameInput;
     public JBTable fieldsTable;
     public JBTextField structNameInput;
-
-    static Notifier notifier = new Notifier("whgo_helper dao-gen");
     public DbConfig dbConfig;
 
     private Project project;

@@ -44,7 +44,7 @@ public class GoUtils {
         return imports;
     }
 
-    public static void sortGoImport(List<String> imports){
+    public static void sortGoImport(List<String> imports) {
         imports.sort((a, b) -> {
             if (a.contains(".") && !b.contains(".")) {
                 return 1;

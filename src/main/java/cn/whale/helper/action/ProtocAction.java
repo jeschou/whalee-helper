@@ -54,6 +54,12 @@ public class ProtocAction extends AnAction {
         return f.toPath().startsWith(base.toPath());
     }
 
+    static File createTempShell(String cmd) throws IOException {
+        File f = File.createTempFile("whalee_helper_protoc", ".sh");
+        Utils.writeFile(f, cmd);
+        return f;
+    }
+
     @Override
     public void update(@NotNull AnActionEvent e) {
         super.update(e);
@@ -179,11 +185,5 @@ public class ProtocAction extends AnAction {
             e.printStackTrace();
             notifier.error(project, Utils.getStackTrace(e));
         }
-    }
-
-    static File createTempShell(String cmd) throws IOException {
-        File f = File.createTempFile("whalee_helper_protoc", ".sh");
-        Utils.writeFile(f, cmd);
-        return f;
     }
 }

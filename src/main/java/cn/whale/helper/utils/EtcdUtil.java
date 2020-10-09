@@ -1,7 +1,6 @@
 package cn.whale.helper.utils;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import java.io.OutputStream;
 import java.net.URL;
@@ -16,11 +15,7 @@ public class EtcdUtil {
     static final String etcd_host = "etcd-pro.meetwhale.com:5379";
     static final String path = "/develop/config/pgsql";
 
-    static ObjectMapper mapper = new ObjectMapper();
-
-    static {
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
+    static Gson gson = new Gson();
 
 
     static long sessionAliveUntil = 0;
@@ -63,6 +58,26 @@ public class EtcdUtil {
         return sessionId;
     }
 
+    public static List<DbConfig> getDbConfigList() throws Exception {
+        List<DbConfig> list = new ArrayList<>();
+        URL url = new URL(etcdkeeper_host + "/getpath?prefix=true&key=" + URLEncoder.encode(path, "UTF-8"));
+        URLConnection conn = url.openConnection();
+        conn.addRequestProperty("Cookie", "etcd-endpoint=" + etcd_host + "; _etcdkeeper_session=" + getEtcdKeeperSessionId());
+        conn.connect();
+        String resp = Utils.readText(conn.getInputStream());
+        VirtualNode virtualNode = gson.fromJson(resp, VirtualNode.class);
+        for (KV kv : virtualNode.node.nodes) {
+            String serviceName = Utils.substringAfterLast(kv.key, "/");
+            if ("db_host".equals(serviceName)) {
+                continue;
+            }
+            DbConfig dbConfig = gson.fromJson(kv.value, DbConfig.class);
+            dbConfig.serviceName = serviceName;
+            list.add(dbConfig);
+        }
+        return list;
+    }
+
     public static class VirtualNode {
         public Node node;
     }
@@ -74,26 +89,6 @@ public class EtcdUtil {
     public static class KV {
         public String key;
         public String value;
-    }
-
-    public static List<DbConfig> getDbConfigList() throws Exception {
-        List<DbConfig> list = new ArrayList<>();
-        URL url = new URL(etcdkeeper_host + "/getpath?prefix=true&key=" + URLEncoder.encode(path, "UTF-8"));
-        URLConnection conn = url.openConnection();
-        conn.addRequestProperty("Cookie", "etcd-endpoint=" + etcd_host + "; _etcdkeeper_session=" + getEtcdKeeperSessionId());
-        conn.connect();
-        String resp = Utils.readText(conn.getInputStream());
-        VirtualNode virtualNode = mapper.readValue(resp, VirtualNode.class);
-        for (KV kv : virtualNode.node.nodes) {
-            String serviceName = Utils.substringAfterLast(kv.key, "/");
-            if ("db_host".equals(serviceName)) {
-                continue;
-            }
-            DbConfig dbConfig = mapper.readValue(kv.value, DbConfig.class);
-            dbConfig.serviceName = serviceName;
-            list.add(dbConfig);
-        }
-        return list;
     }
 
 }

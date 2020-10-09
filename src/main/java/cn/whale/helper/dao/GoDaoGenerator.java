@@ -78,10 +78,10 @@ public class GoDaoGenerator {
         params.put("tableName", tableName);
         params.put("database", database);
         params.put("Database", Utils.toTitleCamelCase(database));
-        if ("common".equals(dbConfig.serviceName)){
+        if ("common".equals(dbConfig.serviceName)) {
             params.put("serviceName", "");
         }
-        if(dbConfig.database.equals(database)) {
+        if (dbConfig.database.equals(database)) {
             params.put("database", "");
         }
 
@@ -98,7 +98,7 @@ public class GoDaoGenerator {
         int maxTypeWidth = 0;
         for (TableRowData trd : fields) {
             maxFieldWidth = Math.max(maxFieldWidth, trd.fieldName.length());
-            maxTypeWidth = Math.max(maxTypeWidth,trd.goType.length());
+            maxTypeWidth = Math.max(maxTypeWidth, trd.goType.length());
         }
 
         StringBuilder fieldsSb = new StringBuilder();

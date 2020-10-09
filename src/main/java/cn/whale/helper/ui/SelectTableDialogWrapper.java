@@ -8,7 +8,6 @@ import com.intellij.openapi.ui.ValidationInfo;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SelectTableDialogWrapper extends DialogWrapper {
