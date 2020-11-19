@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'cn.whale'
-version '1.1-beta3'
+version '1.2-beta1'
 
 repositories {
     mavenCentral()

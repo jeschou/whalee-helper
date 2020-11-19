@@ -1,0 +1,73 @@
+package ${package}
+
+import ($!{imports})
+
+type ${StructName} struct {
+${structFields}
+}
+
+func (do *${StructName}) TableName() string {
+	return "${tableName}"
+}
+
+#if $!{IsDelete}
+// implements hint
+var _ repo.SoftDeleteHook = (*${StructName})(nil)
+
+// repo.SoftDeleteHook
+func (do *${StructName}) BeforeSoftDelete(ctx context.Context) error {
+	do.$!{IsDelete} = 1
+	do.$!{UpdateTime} = utils.NowInt64()
+	return nil
+}
+
+// repo.SoftDeleteHook
+func (do *${StructName}) AfterSoftDelete(ctx context.Context) error {
+	return nil
+}
+
+#fi
+type ${structName}RepoFields struct {
+${repoFieldStructFields}
+}
+
+type ${structName}Repo struct {
+	repo.RepositoryInterface
+	*${structName}RepoFields
+}
+
+var (
+	${structName}RepoInstance *${structName}Repo
+	${structName}RepoOnce     sync.Once
+)
+
+func Get${StructName}Repo() *${structName}Repo {
+	${structName}RepoOnce.Do(func() {
+		repoImpl := repo.NewRepository(new(${StructName}))
+		// repoImpl.Tm = tmMango
+		repoFields := new(${structName}RepoFields)
+		repoImpl.InitRepoFields(repoFields)
+#if $!{IsDelete}
+		repoImpl.MandatoryCondition = repoFields.$!{IsDelete}.Eq(0)
+#fi
+		${structName}RepoInstance = &${structName}Repo{
+			RepositoryInterface:       repoImpl,
+			${structName}RepoFields:   repoFields,
+		}
+	})
+	return ${structName}RepoInstance
+}
+
+func (r *${structName}Repo) Cast(val interface{}) *${StructName} {
+	if val == nil {
+		return nil
+	}
+	return val.(*${StructName})
+}
+
+func (r *${structName}Repo) CastSlice(val interface{}) []*${StructName} {
+	if val == nil {
+		return nil
+	}
+	return *(val.(*[]*${StructName}))
+}

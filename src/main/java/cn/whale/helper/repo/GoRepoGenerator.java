@@ -1,4 +1,4 @@
-package cn.whale.helper.dao;
+package cn.whale.helper.repo;
 
 import cn.whale.helper.template.SimpleTemplateRender;
 import cn.whale.helper.ui.Notifier;
@@ -15,9 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class GoDaoGenerator {
+public class GoRepoGenerator {
 
-    protected static Notifier notifier = new Notifier("whgo_helper gorm-dao-gen");
+    protected static Notifier notifier = new Notifier("whgo_helper gorm-repo-gen");
 
     private Project project;
     private VirtualFile selectedFile;
@@ -30,7 +30,7 @@ public class GoDaoGenerator {
 
     private DbConfig dbConfig;
 
-    public GoDaoGenerator(Project project, VirtualFile selectedFile, DbConfig dbConfig, String fileName, String database, String tableName, String structName, List<TableRowData> fields) {
+    public GoRepoGenerator(Project project, VirtualFile selectedFile, DbConfig dbConfig, String fileName, String database, String tableName, String structName, List<TableRowData> fields) {
         this.project = project;
         this.selectedFile = selectedFile;
         this.fileName = fileName;
@@ -52,7 +52,7 @@ public class GoDaoGenerator {
 
         SimpleTemplateRender templateRender = new SimpleTemplateRender();
         try {
-            templateRender.loadTemplate(GoDaoGenerator.class.getResourceAsStream("dao_template.txt"));
+            templateRender.loadTemplate(GoRepoGenerator.class.getResourceAsStream("repo_template.txt"));
         } catch (IOException e) {
             e.printStackTrace();
             notifier.error(project, Utils.getStackTrace(e));
@@ -85,13 +85,7 @@ public class GoDaoGenerator {
             params.put("database", "");
         }
 
-        StringBuilder impsSb = new StringBuilder();
         List<String> imps = collectImport();
-        impsSb.append("\n");
-        for (String s : imps) {
-            impsSb.append("\t").append(Utils.quote(s)).append("\n");
-        }
-        params.put("imports", impsSb.toString());
 
 
         int maxFieldWidth = 0;
@@ -110,6 +104,30 @@ public class GoDaoGenerator {
         }
         params.put("structFields", fieldsSb.toString());
 
+        StringBuilder repoFieldsSb = new StringBuilder();
+        for (TableRowData trd : fields) {
+            repoFieldsSb.append("\t").append(String.format("%-" + maxFieldWidth + "s repo.FieldInterface", trd.fieldName)).append("\n");
+        }
+        if (repoFieldsSb.length() > 0) {
+            repoFieldsSb.deleteCharAt(repoFieldsSb.length() - 1);
+        }
+        params.put("repoFieldStructFields", repoFieldsSb.toString());
+
+        for (TableRowData trd : fields) {
+            if ("is_delete".equals(trd.name) || "is_deleted".equals(trd.name)) {
+                params.put("IsDelete", trd.fieldName);
+            } else if ("update_time".equals(trd.name) || "updated_time".equals(trd.name)) {
+                params.put("UpdateTime", trd.fieldName);
+            }
+        }
+
+        StringBuilder impsSb = new StringBuilder();
+        impsSb.append("\n");
+        for (String s : imps) {
+            impsSb.append("\t").append(Utils.quote(s)).append("\n");
+        }
+        params.put("imports", impsSb.toString());
+
         templateRender.render(params);
 
         File f = new File(targetDir.getPath(), fileName);
@@ -125,10 +143,8 @@ public class GoDaoGenerator {
 
     private List<String> collectImport() {
         Set<String> sets = new HashSet<>();
-        sets.add("context");
-        sets.add("errors");
         sets.add("sync");
-        sets.add("whgo/product/library/transaction");
+        sets.add("whgo/product/library/repo");
         for (TableRowData trd : fields) {
             String goType = trd.goType;
             if (goType.contains("time.")) {
@@ -139,6 +155,10 @@ public class GoDaoGenerator {
             }
             if (goType.contains("postgres.")) {
                 sets.add("github.com/jinzhu/gorm/dialects/postgres");
+            }
+            if ("is_delete".equals(trd.name)||"is_deleted".equals(trd.name)) {
+                sets.add("context");
+                sets.add("whgo/product/library/utils");
             }
         }
         ArrayList<String> imps = new ArrayList<>(sets);

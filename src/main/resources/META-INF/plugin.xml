@@ -29,8 +29,8 @@
     <actions>
 
 
-        <action id="NewGormModelAction" class="cn.whale.helper.action.NewGormModelAction" text="New Gorm DAO"
-                description="Create gorm DAO from database table">
+        <action id="NewGormModelAction" class="cn.whale.helper.action.NewGormModelAction" text="New Gorm Repo"
+                description="Create gorm repo from database table">
             <add-to-group group-id="NewGroup" anchor="last"/>
         </action>
         <action id="BazelGenAction" class="cn.whale.helper.action.BazelUpdateAction" text="Update BUILD.bazel"

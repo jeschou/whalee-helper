@@ -29,11 +29,11 @@ import java.util.List;
 import java.util.Map;
 
 public class TableSelector extends JPanel {
-    static Notifier notifier = new Notifier("whgo_helper dao-gen");
+    static Notifier notifier = new Notifier("whgo_helper gorm-repo-gen");
     public ComboBox<String> serviceCombox;
     public ComboBox<String> databaseCombox;
     public ComboBox<String> tableCombox;
-    public JBTextField daoNameInput;
+    public JBTextField repoNameInput;
     public JBTable fieldsTable;
     public JBTextField structNameInput;
     public DbConfig dbConfig;
@@ -52,8 +52,8 @@ public class TableSelector extends JPanel {
         setLayout(layout);
 
         add(new JBLabel("File name:"), newCons(0, 0, 1, 1, 0, 0, 8, 0));
-        daoNameInput = new JBTextField();
-        add(daoNameInput, newCons(0, 1, 1, 1, 3, 3, 0, 1));
+        repoNameInput = new JBTextField();
+        add(repoNameInput, newCons(0, 1, 1, 1, 3, 3, 0, 1));
 
         add(new JBLabel("Service name:"), newCons(1, 0, 1, 1, 0, 0, 8, 0));
         serviceCombox = new ComboBox<>();
@@ -150,11 +150,11 @@ public class TableSelector extends JPanel {
             String table = (String) e.getItem();
             List<DB.Column> list = new ArrayList<>();
             if (Utils.isNoneEmpty(database, table)) {
-                daoNameInput.setText(table + "-dao");
+                repoNameInput.setText(table + "-repo");
                 structNameInput.setText(Utils.toTitleCamelCase(table));
                 list = DB.getColumns(dbConfig, database, table);
             } else {
-                daoNameInput.setText("");
+                repoNameInput.setText("");
                 structNameInput.setText("");
             }
             updateFieldsTable(list);
@@ -186,7 +186,7 @@ public class TableSelector extends JPanel {
     }
 
     private void resetFields() {
-        daoNameInput.setText("");
+        repoNameInput.setText("");
         structNameInput.setText("");
         updateFieldsTable(new ArrayList<>());
     }

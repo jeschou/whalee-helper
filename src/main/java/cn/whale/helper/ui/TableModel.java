@@ -58,7 +58,7 @@ public class TableModel extends ReorderableTableModel {
             rd.checked = true;
             rd.fieldName = Utils.toTitleCamelCase(c.name);
             rd.goType = DB.pgToGoType(c.typeName);
-            rd.tag = String.format("`gorm:\"column:%s%s\" json:\"%s\"`", c.name, c.isPk ? ";primary_key" : "", c.name);
+            rd.tag = createTag(c);
             rowDataList.add(rd);
             Vector vectorRow = new Vector();
             for (int i = 0; i < tableColumns.length; i++) {
@@ -70,11 +70,29 @@ public class TableModel extends ReorderableTableModel {
         setDataVector(dataVector, columnVector);
     }
 
+    private String createTag(DB.Column c) {
+        StringBuilder sb=new StringBuilder();
+        sb.append("`gorm:\"column:").append(c.name);
+        if( c.isPk ){
+            sb.append(";primary_key");
+        }
+        if ("created_time".equals(c.name)||"create_time".equals(c.name)) {
+            sb.append(";autoCreateTime");
+        }
+        if ("updated_time".equals(c.name)||"update_time".equals(c.name)) {
+            sb.append(";autoCreateTime;autoUpdateTime");
+        }
+        sb.append("\" json:\"").append(c.name).append("\"`");
+        return sb.toString();
+    }
+
+
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return tableColumns[columnIndex].type;
     }
 }
+
 
 class ColumnConfig {
     String title;

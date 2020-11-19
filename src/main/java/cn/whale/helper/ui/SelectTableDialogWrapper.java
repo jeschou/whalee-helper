@@ -33,8 +33,8 @@ public class SelectTableDialogWrapper extends DialogWrapper {
     @org.jetbrains.annotations.Nullable
     @Override
     protected ValidationInfo doValidate() {
-        if (Utils.isEmpty(tableSelector.daoNameInput.getText())) {
-            return new ValidationInfo("Please input filename", tableSelector.daoNameInput);
+        if (Utils.isEmpty(tableSelector.repoNameInput.getText())) {
+            return new ValidationInfo("Please input filename", tableSelector.repoNameInput);
         }
         String db = (String) tableSelector.databaseCombox.getSelectedItem();
         if (Utils.isEmpty(db)) {
@@ -54,7 +54,7 @@ public class SelectTableDialogWrapper extends DialogWrapper {
     }
 
     public String getFileName() {
-        return tableSelector.daoNameInput.getText().trim();
+        return tableSelector.repoNameInput.getText().trim();
     }
 
     public String getTableName() {

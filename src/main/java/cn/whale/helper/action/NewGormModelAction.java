@@ -1,6 +1,6 @@
 package cn.whale.helper.action;
 
-import cn.whale.helper.dao.GoDaoGenerator;
+import cn.whale.helper.repo.GoRepoGenerator;
 import cn.whale.helper.ui.SelectTableDialogWrapper;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -32,7 +32,7 @@ public class NewGormModelAction extends AnAction {
             return;
         }
 
-        new GoDaoGenerator(project, virtualFile, dialog.getDbConfig(), dialog.getFileName(), dialog.getDatabase(), dialog.getTableName(), dialog.getStructName(), dialog.getColumnData()).generate();
+        new GoRepoGenerator(project, virtualFile, dialog.getDbConfig(), dialog.getFileName(), dialog.getDatabase(), dialog.getTableName(), dialog.getStructName(), dialog.getColumnData()).generate();
 
     }
 }
