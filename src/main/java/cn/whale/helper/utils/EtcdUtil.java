@@ -6,9 +6,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class EtcdUtil {
     static final String etcdkeeper_host = "http://etcdkeeper.meetwhale.com:12000/v3";
@@ -58,6 +56,8 @@ public class EtcdUtil {
         return sessionId;
     }
 
+    static Set<String> skipCfg = new HashSet<>(Arrays.asList("db_host", "clickhouse", "hive"));
+
     public static List<DbConfig> getDbConfigList() throws Exception {
         List<DbConfig> list = new ArrayList<>();
         URL url = new URL(etcdkeeper_host + "/getpath?prefix=true&key=" + URLEncoder.encode(path, "UTF-8"));
@@ -68,7 +68,7 @@ public class EtcdUtil {
         VirtualNode virtualNode = gson.fromJson(resp, VirtualNode.class);
         for (KV kv : virtualNode.node.nodes) {
             String serviceName = Utils.substringAfterLast(kv.key, "/");
-            if ("db_host".equals(serviceName)) {
+            if (skipCfg.contains(serviceName)) {
                 continue;
             }
             DbConfig dbConfig = gson.fromJson(kv.value, DbConfig.class);
