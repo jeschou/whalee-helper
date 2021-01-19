@@ -30,6 +30,7 @@
 
 
         <action id="NewGormModelAction" class="cn.whale.helper.action.NewGormModelAction" text="New Gorm Repo"
+                icon="PluginIcons.REPO"
                 description="Create gorm repo from database table">
             <add-to-group group-id="NewGroup" anchor="last"/>
         </action>
