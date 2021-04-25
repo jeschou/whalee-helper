@@ -47,10 +47,15 @@ public class ProtoGenerator extends AbstractBazelGenerator {
     }
 
     List<String> collect_proto_library_deps(File projectRoot, List<File> protoFiles) throws IOException {
+        Set<String> curDirProtoFiles = protoFiles.stream().map(File::getAbsolutePath).collect(Collectors.toSet());
         List<String> protoDeps = new ArrayList<>();
         Set<String> uniqueSet = new HashSet<>();
-        for (String pf : ProtoUtil.readImports(protoFiles)) {
-            String[] go_package = ProtoUtil.readGoPackage(new File(projectRoot, pf));
+        for (String ppath : ProtoUtil.readImports(protoFiles)) {
+            File pf = new File(projectRoot, ppath);
+            if (curDirProtoFiles.contains(pf.getAbsolutePath())) {
+                continue;
+            }
+            String[] go_package = ProtoUtil.readGoPackage(pf);
             if (go_package == null) {
                 System.out.println(pf + " has no go_package declare");
                 continue;
@@ -68,13 +73,18 @@ public class ProtoGenerator extends AbstractBazelGenerator {
     }
 
     List<String> collect_go_proto_library_deps(File projectRoot, List<File> protoFiles) throws IOException {
+        Set<String> curDirProtoFiles = protoFiles.stream().map(File::getAbsolutePath).collect(Collectors.toSet());
         List<String> protoImports = ProtoUtil.readImports(protoFiles);
         List<String> libDep = new ArrayList<>();
         Set<String> uniqueSet = new HashSet<>();
-        for (String pf : protoImports) {
-            String[] go_package = ProtoUtil.readGoPackage(new File(projectRoot, pf));
+        for (String ppath : protoImports) {
+            File pf = new File(projectRoot, ppath);
+            if (curDirProtoFiles.contains(pf.getAbsolutePath())) {
+                continue;
+            }
+            String[] go_package = ProtoUtil.readGoPackage(pf);
             if (go_package == null) {
-                System.out.println(pf + " has no go_package declare");
+                System.out.println(ppath + " has no go_package declare");
                 continue;
             }
             String dep = go_package[0].replace(projectModuleName, "/") + ":go_default_library";
