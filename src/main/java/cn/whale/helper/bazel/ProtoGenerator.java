@@ -6,10 +6,7 @@ import com.intellij.openapi.project.Project;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ProtoGenerator extends AbstractBazelGenerator {
@@ -51,7 +48,7 @@ public class ProtoGenerator extends AbstractBazelGenerator {
 
     List<String> collect_proto_library_deps(File projectRoot, List<File> protoFiles) throws IOException {
         List<String> protoDeps = new ArrayList<>();
-
+        Set<String> uniqueSet = new HashSet<>();
         for (String pf : ProtoUtil.readImports(protoFiles)) {
             String[] go_package = ProtoUtil.readGoPackage(new File(projectRoot, pf));
             if (go_package == null) {
@@ -63,8 +60,9 @@ public class ProtoGenerator extends AbstractBazelGenerator {
                 go_package = new String[]{go_package[0], Utils.splitAndGet(go_package[0], "/", -1)};
             }
             String dep = go_package[0].replace(projectModuleName, "/") + ":" + go_package[1] + "_proto";
-
-            protoDeps.add(dep);
+            if (uniqueSet.add(dep)) {
+                protoDeps.add(dep);
+            }
         }
         return protoDeps;
     }
@@ -72,6 +70,7 @@ public class ProtoGenerator extends AbstractBazelGenerator {
     List<String> collect_go_proto_library_deps(File projectRoot, List<File> protoFiles) throws IOException {
         List<String> protoImports = ProtoUtil.readImports(protoFiles);
         List<String> libDep = new ArrayList<>();
+        Set<String> uniqueSet = new HashSet<>();
         for (String pf : protoImports) {
             String[] go_package = ProtoUtil.readGoPackage(new File(projectRoot, pf));
             if (go_package == null) {
@@ -79,7 +78,9 @@ public class ProtoGenerator extends AbstractBazelGenerator {
                 continue;
             }
             String dep = go_package[0].replace(projectModuleName, "/") + ":go_default_library";
-            libDep.add(dep);
+            if (uniqueSet.add(dep)) {
+                libDep.add(dep);
+            }
         }
         return libDep;
     }
