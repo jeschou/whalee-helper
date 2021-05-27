@@ -13,6 +13,7 @@ go_library(
 go_binary(
     name = "${dirname}",
     embed = [":go_default_library"],
+    pure = "on",
     visibility = ["//visibility:public"],
 )
 
@@ -35,7 +36,7 @@ pkg_tar(
 # Include it in our base image as a tar.
 container_image(
     name = "image",
-    base = "@product_golang_base//image",
+    base = "@product_whale_user//image",
 #if $!{cfg}
     tars = [":conf_tar"],
 #fi
