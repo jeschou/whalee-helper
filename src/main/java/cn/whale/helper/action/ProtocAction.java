@@ -149,7 +149,7 @@ public class ProtocAction extends AnAction {
 
             System.out.println("generate proto: " + relativePath);
 
-            String cmd = "protoc %s -I/usr/local/include -I. -I../  -I../../  -I../../../  -I../../../../  --go_out=plugins=grpc:%s --micro_out=logtostderr=true:%s";
+            String cmd = "protoc %s -I. -I../  -I../../  -I../../../  -I../../../../  --go_out=plugins=grpc:%s --micro_out=logtostderr=true:%s";
 
             if (Utils.isWindows()) {
                 cmd = "protoc.exe %s -I. -I..\\  -I..\\..\\  -I..\\..\\..\\  -I..\\..\\..\\..\\  --go_out=plugins=grpc:%s --micro_out=logtostderr=true:%s";
@@ -176,9 +176,9 @@ public class ProtocAction extends AnAction {
                 //notifier.info(project, normalContent);
             }
             if (Utils.isNotEmpty(errorContent)) {
-                notifier.error(project, errorContent);
+                notifier.error(project, String.format("working dir:%s\ncmd:%s\n%s", cmdDir, cmd, errorContent));
             } else {
-                notifier.info(project, "compile " + arg + " success");
+                notifier.info(project, String.format("working dir:%s\ncmd:%s\ncompile %s success", cmdDir, cmd, arg));
             }
 
         } catch (IOException e) {

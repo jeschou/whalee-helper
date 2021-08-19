@@ -63,6 +63,16 @@
                 description="BazelGenAction desc">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
+        <action id="BazelBuildAction_popup" class="cn.whale.helper.action.BazelBuildAction" text="bazel build"
+                icon="PluginIcons.BAZEL"
+                description="execute bazel build">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+        <action id="SwagAction_popup" class="cn.whale.helper.action.SwagInitAction" text="swag init"
+                icon="PluginIcons.SWAG"
+                description="execute swag init">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
         <action id="BazelGenAction_popup2" class="cn.whale.helper.action.BazelUpdateAction" text="Update BUILD.bazel"
                 icon="PluginIcons.BAZEL"
                 description="BazelGenAction desc">

@@ -8,4 +8,5 @@ public interface PluginIcons {
     Icon BAZEL = IconLoader.getIcon("/icons/bazel-icon.svg");
     Icon PROTOBUF = IconLoader.getIcon("/icons/protobuf.svg");
     Icon REPO = IconLoader.getIcon("/icons/repo.svg");
+    Icon SWAG = IconLoader.getIcon("/icons/swagger.svg");
 }
