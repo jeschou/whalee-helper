@@ -60,19 +60,18 @@ public class IDEUtils {
                 }
 
                 new Thread(() -> {
-                    TerminalOutputStream terminalOutputStream2 = terminalPanel.getTerminalOutputStream();
-                    for (int i = 0; i < 10 && terminalOutputStream2 == null; i++) {
+                    for (int i = 0; i < 10; i++) {
                         // try wait initialization
                         try {
                             Thread.sleep(300);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        terminalOutputStream2 = terminalPanel.getTerminalOutputStream();
-                    }
-                    if (terminalOutputStream2 != null) {
-                        execute(terminalOutputStream2, workingDir, cmd);
-                        return;
+                        TerminalOutputStream terminalOutputStream2 = terminalPanel.getTerminalOutputStream();
+                        if (terminalOutputStream2 != null) {
+                            execute(terminalOutputStream2, workingDir, cmd);
+                            return;
+                        }
                     }
                 }).start();
             });

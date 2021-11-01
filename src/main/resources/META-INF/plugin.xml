@@ -2,10 +2,10 @@
     <id>com.meetwhale.whgo.project.helper</id>
     <name>Whale Engineer Helper</name>
     <version>1.0-beta</version>
-    <vendor email="shengyangzhou@whale.im" url="http://www.meetwhale.com">Whale</vendor>
+    <vendor email="shengyangzhou@whale.im" url="https://www.meetwhale.com">Whale</vendor>
 
     <description><![CDATA[
-      whale engineer helper, 辅助开发人员提高效率. 主要特性包括 bazel 辅助, proto 辅助 等
+      whale engineer helper, 辅助开发人员提高效率. 主要辅助支持 bazel, protoc, swag, repo 等
     ]]></description>
 
     <change-notes><![CDATA[
@@ -45,12 +45,18 @@
                 description="BazelGenAction desc">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
+        <action id="BazelBuildAction_popup2" class="cn.whale.helper.action.BazelBuildAction" text="bazel build"
+                icon="PluginIcons.BAZEL"
+                description="execute bazel build">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </action>
 
         <action id="whgo.generate.proto.action3" class="cn.whale.helper.action.ProtocAction" text="Protoc"
                 icon="PluginIcons.PROTOBUF"
                 description="description">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
+
 
         <action id="whgo.generate.proto.action4" class="cn.whale.helper.action.ProtocAction" text="Protoc"
                 icon="PluginIcons.PROTOBUF"
@@ -71,6 +77,11 @@
         <action id="SwagAction_popup" class="cn.whale.helper.action.SwagInitAction" text="swag init"
                 icon="PluginIcons.SWAG"
                 description="execute swag init">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+        <action id="GblAction_popup" class="cn.whale.helper.action.GblOssAction" text="gbl_oss"
+                icon="PluginIcons.SWAG"
+                description="gbl and oss">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
         <action id="BazelGenAction_popup2" class="cn.whale.helper.action.BazelUpdateAction" text="Update BUILD.bazel"

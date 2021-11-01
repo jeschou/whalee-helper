@@ -15,8 +15,6 @@ public class NewGormModelAction extends AnAction {
     public void update(@NotNull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabledAndVisible(true);
-
-
     }
 
 

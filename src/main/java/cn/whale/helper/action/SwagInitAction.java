@@ -11,11 +11,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 public class SwagInitAction extends AnAction {
 
     static Notifier notifier = new Notifier("whgo_helper swag");
@@ -28,35 +23,6 @@ public class SwagInitAction extends AnAction {
         }
     }
 
-    static List<VirtualFile> getChildrenProtoFiles(VirtualFile dir) {
-        List<VirtualFile> list = new ArrayList<>();
-        VirtualFile[] childs = dir.getChildren();
-        if (childs == null) {
-            return list;
-        }
-        for (VirtualFile vf : childs) {
-            if (isProtoSourceFile(vf)) {
-                list.add(vf);
-            }
-        }
-        return list;
-    }
-
-    static boolean isProtoSourceFile(VirtualFile vf) {
-        if (vf == null) return false;
-        return "proto".equalsIgnoreCase(vf.getExtension());
-    }
-
-    static boolean isSubOrEqual(File base, File f) {
-        return f.toPath().startsWith(base.toPath());
-    }
-
-    static File createTempShell(String cmd) throws IOException {
-        File f = File.createTempFile("whalee_helper_protoc", ".sh");
-        Utils.writeFile(f, cmd);
-        return f;
-    }
-
     @Override
     public void update(@NotNull AnActionEvent e) {
         super.update(e);
@@ -64,11 +30,13 @@ public class SwagInitAction extends AnAction {
 
         Presentation presentation = e.getPresentation();
 
-        if (virtualFile == null) {
+        VirtualFile moduleRoot = IDEUtils.getModuleRoot(virtualFile);
+        if (moduleRoot == null || !moduleRoot.getName().endsWith("api-server")) {
             presentation.setEnabledAndVisible(false);
             return;
         }
-        presentation.setEnabledAndVisible(virtualFile.getPath().contains("api-server/"));
+        presentation.setText("swag init (" + moduleRoot.getName() + ")");
+        presentation.setEnabledAndVisible(true);
     }
 
     @Override
