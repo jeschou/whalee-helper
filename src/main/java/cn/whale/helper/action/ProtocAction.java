@@ -149,13 +149,13 @@ public class ProtocAction extends AnAction {
 
             System.out.println("generate proto: " + relativePath);
 
-            String cmd = "protoc %s -I. -I../  -I../../  -I../../../  -I../../../../  --go_out=plugins=grpc:%s --micro_out=logtostderr=true:%s";
+            String cmd = "protoc %s -I. -I../  -I../../  -I../../../  -I../../../../  --go_out=plugins=grpc:%s";
 
             if (Utils.isWindows()) {
-                cmd = "protoc.exe %s -I. -I..\\  -I..\\..\\  -I..\\..\\..\\  -I..\\..\\..\\..\\  --go_out=plugins=grpc:%s --micro_out=logtostderr=true:%s";
+                cmd = "protoc.exe %s -I. -I..\\  -I..\\..\\  -I..\\..\\..\\  -I..\\..\\..\\..\\  --go_out=plugins=grpc:%s";
             }
 
-            cmd = String.format(cmd, arg, outPathRelative, outPathRelative);
+            cmd = String.format(cmd, arg, outPathRelative);
 
             ProcessBuilder processBuilder = new ProcessBuilder();
 

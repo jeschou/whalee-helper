@@ -19,7 +19,7 @@ go_proto_library(
 
 go_library(
     name = "go_default_library",
-    srcs = [${micro_files}],
+    srcs = [${go_files}],
     embed = [":${whale_dir_name}_proto_go_proto"],
     importpath = "${relativepath}",
     visibility = ["//visibility:public"],

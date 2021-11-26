@@ -84,6 +84,11 @@
                 description="gbl and oss">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
+<!--        <action id="Trans2Grpc_popup" class="cn.whale.helper.action.TransGrpcAction" text="Micro 2 Grpc"-->
+<!--                icon="PluginIcons.SWAG"-->
+<!--                description="Micro 2 Grpc">-->
+<!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+<!--        </action>-->
         <action id="BazelGenAction_popup2" class="cn.whale.helper.action.BazelUpdateAction" text="Update BUILD.bazel"
                 icon="PluginIcons.BAZEL"
                 description="BazelGenAction desc">

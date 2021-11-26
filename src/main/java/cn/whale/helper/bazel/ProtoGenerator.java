@@ -37,10 +37,10 @@ public class ProtoGenerator extends AbstractBazelGenerator {
         deps = collect_go_proto_library_deps(projectRoot, protoFiles);
         param.put("go_proto_library_deps", joinAsMultiLine(quote(deps)));
 
-        List<File> microFiles = goGenFiles.stream().filter(f -> f.getName().endsWith(".micro.go")).collect(Collectors.toList());
-        param.put("micro_files", getQuotedFileNames(microFiles));
+        List<File> goFiles = goGenFiles;
+        param.put("go_files", getQuotedFileNames(goFiles));
 
-        deps = collectGoDep(microFiles);
+        deps = collectGoDep(goFiles);
         param.put("go_library_deps", joinAsMultiLine(quote(deps)));
 
         return param;

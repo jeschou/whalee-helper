@@ -45,7 +45,7 @@ public class BazelUtils {
                 goFiles.add(f);
                 if (fn.endsWith("_test.go")) {
                     goTestFiles.add(f);
-                } else if (fn.endsWith(".pb.go") || fn.endsWith(".micro.go")) {
+                } else if (fn.endsWith(".pb.gw.go")) {
                     protoGenFiles.add(f);
                 } else {
                     goSrcFiles.add(f);
