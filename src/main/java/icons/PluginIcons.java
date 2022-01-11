@@ -9,4 +9,5 @@ public interface PluginIcons {
     Icon PROTOBUF = IconLoader.getIcon("/icons/protobuf.svg");
     Icon REPO = IconLoader.getIcon("/icons/repo.svg");
     Icon SWAG = IconLoader.getIcon("/icons/swagger.svg");
+    Icon UPLOAD = IconLoader.getIcon("/icons/upload.svg");
 }

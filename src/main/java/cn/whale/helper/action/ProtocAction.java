@@ -54,12 +54,6 @@ public class ProtocAction extends AnAction {
         return f.toPath().startsWith(base.toPath());
     }
 
-    static File createTempShell(String cmd) throws IOException {
-        File f = File.createTempFile("whalee_helper_protoc", ".sh");
-        Utils.writeFile(f, cmd);
-        return f;
-    }
-
     @Override
     public void update(@NotNull AnActionEvent e) {
         super.update(e);
@@ -157,26 +151,13 @@ public class ProtocAction extends AnAction {
 
             cmd = String.format(cmd, arg, outPathRelative);
 
-            ProcessBuilder processBuilder = new ProcessBuilder();
+            String[] cmdOutput = Utils.executeShell(cmdDir, cmd);
 
-            processBuilder.directory(cmdDir);
-            if (Utils.isWindows()) {
-                processBuilder.command("cmd.exe", "/C", cmd);
-            } else {
-                File f = createTempShell(cmd);
-                String sh = Utils.getLoginShell();
-                processBuilder.command(sh, "-i", f.getAbsolutePath());
-            }
-            Process process = processBuilder.start();
-            String normalContent = Utils.readText(process.getInputStream());
-            String errorContent = Utils.readText(process.getErrorStream());
-            process.destroy();
-
-            if (Utils.isNotEmpty(normalContent)) {
+            if (Utils.isNotEmpty(cmdOutput[0])) {
                 //notifier.info(project, normalContent);
             }
-            if (Utils.isNotEmpty(errorContent)) {
-                notifier.error(project, String.format("working dir:%s\ncmd:%s\n%s", cmdDir, cmd, errorContent));
+            if (Utils.isNotEmpty(cmdOutput[1])) {
+                notifier.error(project, String.format("working dir:%s\ncmd:%s\n%s", cmdDir, cmd, cmdOutput[1]));
             } else {
                 notifier.info(project, String.format("working dir:%s\ncmd:%s\ncompile %s success", cmdDir, cmd, arg));
             }

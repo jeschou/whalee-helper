@@ -114,7 +114,27 @@ public class Utils {
             safeClose(is);
         }
 
-        return new String(baos.toByteArray());
+        return baos.toString("UTF-8");
+    }
+
+    public static String readText(InputStream is, String charset) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            copy(is, baos);
+        } finally {
+            safeClose(is);
+        }
+
+        return baos.toString(charset);
+    }
+
+    public static String readText(File file) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (FileInputStream fis = new FileInputStream(file)) {
+            copy(fis, baos);
+        }
+
+        return baos.toString("UTF-8");
     }
 
     public static void copy(InputStream is, OutputStream os) throws IOException {
@@ -436,6 +456,37 @@ public class Utils {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * for windows, shellCmd is CMD.<br>
+     * for *unix , shellCmd is shell
+     *
+     * @return [stdout, stderror]
+     */
+    public static String[] executeShell(File cmdDir, String shellCmd) throws IOException {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+
+        processBuilder.directory(cmdDir);
+        if (Utils.isWindows()) {
+            processBuilder.command("cmd.exe", "/C", shellCmd);
+        } else {
+            File f = File.createTempFile("whalee_helper", ".sh");
+            Utils.writeFile(f, shellCmd);
+            String sh = Utils.getLoginShell();
+            processBuilder.command(sh, "-i", f.getAbsolutePath());
+        }
+        Process process = processBuilder.start();
+        String normalContent = Utils.readText(process.getInputStream());
+        String errorContent = Utils.readText(process.getErrorStream());
+        process.destroy();
+        return new String[]{normalContent, errorContent};
+    }
+
+    public static void copyFileTo(File file, OutputStream os) throws FileNotFoundException, IOException {
+        try (FileInputStream fis = new FileInputStream(file)) {
+            copy(fis, os);
         }
     }
 }

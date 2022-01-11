@@ -6,7 +6,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,6 +20,10 @@ public class TransGrpcAction extends AnAction {
         super.update(e);
         VirtualFile virtualFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
         Presentation presentation = e.getPresentation();
+        if (1 == 1) {
+            presentation.setEnabledAndVisible(false);
+            return;
+        }
         VirtualFile moduleRoot = IDEUtils.getModuleRoot(virtualFile);
         if (moduleRoot == null) {
             presentation.setEnabledAndVisible(false);
