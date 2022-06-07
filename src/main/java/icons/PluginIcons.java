@@ -5,11 +5,11 @@ import com.intellij.openapi.util.IconLoader;
 import javax.swing.*;
 
 public interface PluginIcons {
-    Icon BAZEL = IconLoader.getIcon("/icons/bazel-icon.svg");
-    Icon PROTOBUF = IconLoader.getIcon("/icons/protobuf.svg");
-    Icon REPO = IconLoader.getIcon("/icons/repo.svg");
-    Icon SWAG = IconLoader.getIcon("/icons/swagger.svg");
-    Icon UPLOAD = IconLoader.getIcon("/icons/upload.svg");
-    Icon DEPLOY = IconLoader.getIcon("/icons/deploy.svg");
-    Icon RANCHER = IconLoader.getIcon("/icons/rancher.svg");
+    Icon BAZEL = IconLoader.getIcon("/icons/bazel-icon.svg", PluginIcons.class);
+    Icon PROTOBUF = IconLoader.getIcon("/icons/protobuf.svg", PluginIcons.class);
+    Icon REPO = IconLoader.getIcon("/icons/repo.svg", PluginIcons.class);
+    Icon SWAG = IconLoader.getIcon("/icons/swagger.svg", PluginIcons.class);
+    Icon UPLOAD = IconLoader.getIcon("/icons/upload.svg", PluginIcons.class);
+    Icon DEPLOY = IconLoader.getIcon("/icons/deploy.svg", PluginIcons.class);
+    Icon RANCHER = IconLoader.getIcon("/icons/rancher.svg", PluginIcons.class);
 }

@@ -3,7 +3,7 @@ package cn.whale.helper.ui;
 import cn.whale.helper.ui.table.TableRowTransferHandler;
 import cn.whale.helper.utils.DB;
 import cn.whale.helper.utils.DbConfig;
-import cn.whale.helper.utils.EtcdUtil;
+import cn.whale.helper.utils.NacosUtil;
 import cn.whale.helper.utils.Utils;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
@@ -164,7 +164,7 @@ public class TableSelector extends JPanel {
         setLoading(databaseCombox);
         new Thread(() -> {
             try {
-                final List<DbConfig> cfgs = EtcdUtil.getDbConfigList();
+                final List<DbConfig> cfgs = NacosUtil.getDbConfigList();
                 final List<String> dbs = DB.getDatabases(cfgs.get(0));
 
                 SwingUtilities.invokeLater(() -> {

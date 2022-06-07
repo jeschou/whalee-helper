@@ -1,10 +1,10 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.21'
+    id 'org.jetbrains.intellij' version '1.5.2'
 }
 
 group 'cn.whale'
-version '1.5'
+version '1.5.1'
 
 repositories {
     maven { url 'https://maven.aliyun.com/repository/public/' }
@@ -15,14 +15,10 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
-    compile('io.etcd:jetcd-core:0.5.3')
-    {
-        exclude group: 'org.slf4j'
-    }
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.11.2'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.11.2'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
 
 }
 
@@ -35,13 +31,11 @@ processResources {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    //localPath '/Applications/GoLand.app'
-    localPath '/Applications/IntelliJ IDEA CE.app'
-    //version '2020.1'
+    localPath = '/Applications/IntelliJ IDEA CE.app'
 }
 
 patchPluginXml {
-    sinceBuild "173.0"
-    untilBuild null
+    sinceBuild = "173.0"
+    untilBuild = null
     version
 }
