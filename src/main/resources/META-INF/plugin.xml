@@ -105,16 +105,16 @@
             <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>
         </action>
 
-        <action id="whgo.proto.upload.action" class="cn.whale.helper.action.UploadProtoAction" text="Upload Proto"
-                icon="PluginIcons.UPLOAD"
-                description="description">
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
-        </action>
-        <action id="whgo.proto.upload.action2" class="cn.whale.helper.action.UploadProtoAction" text="Upload Proto"
-                icon="PluginIcons.UPLOAD"
-                description="gbl and oss">
-            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-        </action>
+<!--        <action id="whgo.proto.upload.action" class="cn.whale.helper.action.UploadProtoAction" text="Upload Proto"-->
+<!--                icon="PluginIcons.UPLOAD"-->
+<!--                description="description">-->
+<!--            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>-->
+<!--        </action>-->
+<!--        <action id="whgo.proto.upload.action2" class="cn.whale.helper.action.UploadProtoAction" text="Upload Proto"-->
+<!--                icon="PluginIcons.UPLOAD"-->
+<!--                description="gbl and oss">-->
+<!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+<!--        </action>-->
 
     </actions>
 
