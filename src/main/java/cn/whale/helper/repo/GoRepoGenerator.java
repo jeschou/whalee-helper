@@ -8,12 +8,16 @@ import cn.whale.helper.utils.GoUtils;
 import cn.whale.helper.utils.IDEUtils;
 import cn.whale.helper.utils.Utils;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
+import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GoRepoGenerator {
 
@@ -127,6 +131,7 @@ public class GoRepoGenerator {
             impsSb.append("\t").append(Utils.quote(s)).append("\n");
         }
         params.put("imports", impsSb.toString());
+        params.put("serviceName", guessServiceName());
 
         templateRender.render(params);
 
@@ -141,10 +146,40 @@ public class GoRepoGenerator {
 
     }
 
+    private String guessServiceName() {
+        VirtualFile moduleRoot = IDEUtils.getModuleRoot(selectedFile);
+        VirtualFile mainGo = moduleRoot.findChild("main.go");
+        if (mainGo == null) {
+            return "";
+        }
+        List<String> lines = null;
+        try {
+            lines = Utils.readLines(mainGo.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+            notifier.error(project, Utils.getStackTrace(e));
+            return moduleRoot.getName().replace("whale-", "");
+        }
+        lines = lines.stream().map(String::trim).filter(s -> !s.startsWith("//")).collect(Collectors.toList());
+        for (String line : lines) {
+            if (line.contains(".NewServer(")) {
+                return StringUtils.substringBetween(line, "\"", "\"");
+            }
+        }
+        for (String line : lines) {
+            if (line.contains("const SERVICE_NAME =")) {
+                return StringUtils.substringBetween(line, "\"", "\"");
+            }
+        }
+
+        return moduleRoot.getName().replace("whale-", "");
+    }
+
     private List<String> collectImport() {
         Set<String> sets = new HashSet<>();
         sets.add("sync");
         sets.add("whgo/product/library/repo");
+        sets.add("whgo/library/frameworks/pgsql");
         for (TableRowData trd : fields) {
             String goType = trd.goType;
             if (goType.contains("time.")) {
@@ -156,7 +191,7 @@ public class GoRepoGenerator {
             if (goType.contains("postgres.")) {
                 sets.add("github.com/jinzhu/gorm/dialects/postgres");
             }
-            if ("is_delete".equals(trd.name)||"is_deleted".equals(trd.name)) {
+            if ("is_delete".equals(trd.name) || "is_deleted".equals(trd.name)) {
                 sets.add("context");
                 sets.add("whgo/product/library/utils");
             }

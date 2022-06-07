@@ -44,7 +44,7 @@ var (
 func Get${StructName}Repo() *${structName}Repo {
 	${structName}RepoOnce.Do(func() {
 		repoImpl := repo.NewRepository(new(${StructName}))
-		// repoImpl.Tm = tmMango
+		repoImpl.Tm = pgsql.NewTransactionManager("${serviceName}","")
 		repoFields := new(${structName}RepoFields)
 		repoImpl.InitRepoFields(repoFields)
 #if $!{IsDelete}
