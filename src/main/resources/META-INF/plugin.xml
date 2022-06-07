@@ -79,12 +79,22 @@
                 description="execute swag init">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
-        <action id="GblAction_popup" class="cn.whale.helper.action.GblOssAction" text="gbl_oss"
-                icon="PluginIcons.SWAG"
-                description="gbl and oss">
+<!--        <action id="GblAction_popup" class="cn.whale.helper.action.experimental.GblOssAction" text="gbl_oss"-->
+<!--                icon="PluginIcons.SWAG"-->
+<!--                description="gbl and oss">-->
+<!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+<!--        </action>-->
+        <action id="DeployAction_popup" class="cn.whale.helper.action.experimental.DeployAction" text="deploy rancher"
+                icon="PluginIcons.RANCHER"
+                description="deploy to rancher">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
-<!--        <action id="Trans2Grpc_popup" class="cn.whale.helper.action.TransGrpcAction" text="Micro 2 Grpc"-->
+        <action id="DeployLocalAction_popup" class="cn.whale.helper.action.experimental.DeployLocalAction" text="deploy local"
+                icon="PluginIcons.DEPLOY"
+                description="deploy to hmac">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+<!--        <action id="Trans2Grpc_popup" class="cn.whale.helper.action.experimental.TransGrpcAction" text="Micro 2 Grpc"-->
 <!--                icon="PluginIcons.SWAG"-->
 <!--                description="Micro 2 Grpc">-->
 <!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->

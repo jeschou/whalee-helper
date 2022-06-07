@@ -1,4 +1,4 @@
-package cn.whale.helper.action;
+package cn.whale.helper.action.experimental;
 
 import cn.whale.helper.utils.IDEUtils;
 import com.intellij.openapi.actionSystem.AnAction;

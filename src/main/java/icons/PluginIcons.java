@@ -10,4 +10,6 @@ public interface PluginIcons {
     Icon REPO = IconLoader.getIcon("/icons/repo.svg");
     Icon SWAG = IconLoader.getIcon("/icons/swagger.svg");
     Icon UPLOAD = IconLoader.getIcon("/icons/upload.svg");
+    Icon DEPLOY = IconLoader.getIcon("/icons/deploy.svg");
+    Icon RANCHER = IconLoader.getIcon("/icons/rancher.svg");
 }

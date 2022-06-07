@@ -1,4 +1,4 @@
-package cn.whale.helper.action;
+package cn.whale.helper.action.experimental;
 
 import cn.whale.helper.ui.Notifier;
 import cn.whale.helper.utils.IDEUtils;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 
-public class GblOssAction extends AnAction {
+public class DeployAction extends AnAction {
 
     static Notifier notifier = new Notifier("whgo_helper gbl");
     static boolean enabled = false;
@@ -45,7 +45,7 @@ public class GblOssAction extends AnAction {
             presentation.setEnabledAndVisible(false);
             return;
         }
-        presentation.setText("gbl_oss " + virtualFile.getParent().getName());
+        presentation.setText("deploy " + moduleRoot.getName());
         presentation.setEnabledAndVisible(true);
     }
 
@@ -59,8 +59,8 @@ public class GblOssAction extends AnAction {
         if (virtualFile == null) {
             return;
         }
-        VirtualFile dir = virtualFile.getParent();
-        String cmd = String.format("gbl -o %s *.go && oss up %s && rm %s", dir.getName(), dir.getName(), dir.getName());
+        VirtualFile dir = IDEUtils.getModuleRoot(virtualFile);
+        String cmd = String.format("gbl -o %s *.go && curl -F \"filename=@%s\" http://hmac:8999/%s/?deploy=rancher && rm %s", dir.getName(), dir.getName(), dir.getName(), dir.getName());
 
         IDEUtils.executeInTerminal(project, dir.getPath(), cmd);
     }
