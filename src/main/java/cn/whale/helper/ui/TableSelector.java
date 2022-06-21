@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TableSelector extends JPanel {
-    static Notifier notifier = new Notifier("whgo_helper gorm-repo-gen");
+    static Notifier notifier = Notifier.getInstance("whgo_helper gorm-repo-gen");
     public ComboBox<String> serviceCombox;
     public ComboBox<String> databaseCombox;
     public ComboBox<String> tableCombox;

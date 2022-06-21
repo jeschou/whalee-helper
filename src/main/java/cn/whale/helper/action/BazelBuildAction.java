@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class BazelBuildAction extends AnAction {
 
-    static Notifier notifier = new Notifier("whgo_helper bazel");
+    static Notifier notifier = Notifier.getInstance("whgo_helper bazel");
 
     @Override
     public void update(@NotNull AnActionEvent e) {

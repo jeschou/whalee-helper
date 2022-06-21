@@ -21,7 +21,7 @@ import java.util.List;
 
 public class ProtocAction extends AnAction {
 
-    static Notifier notifier = new Notifier("whgo_helper protoc");
+    static Notifier notifier = Notifier.getInstance("whgo_helper protoc");
 
     static String relative_parent = "../";
 

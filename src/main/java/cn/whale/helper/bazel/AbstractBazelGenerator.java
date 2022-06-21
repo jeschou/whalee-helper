@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractBazelGenerator {
 
-    protected static Notifier notifier = new Notifier("whgo_helper bazel");
+    protected static Notifier notifier = Notifier.getInstance("whgo_helper bazel");
 
     static Map<String, String> stdlibs = new HashMap<>();
 

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class GoRepoGenerator {
 
-    protected static Notifier notifier = new Notifier("whgo_helper gorm-repo-gen");
+    protected static Notifier notifier = Notifier.getInstance("whgo_helper gorm-repo-gen");
 
     private Project project;
     private VirtualFile selectedFile;

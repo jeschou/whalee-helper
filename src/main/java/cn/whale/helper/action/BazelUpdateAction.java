@@ -16,7 +16,7 @@ import java.util.List;
 
 public class BazelUpdateAction extends AnAction {
 
-    static Notifier notifier = new Notifier("whgo_helper bazel");
+    static Notifier notifier = Notifier.getInstance("whgo_helper bazel");
 
     @Override
     public void update(@NotNull AnActionEvent e) {

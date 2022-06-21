@@ -16,7 +16,7 @@ import java.io.IOException;
 
 public class GblOssAction extends AnAction {
 
-    static Notifier notifier = new Notifier("whgo_helper gbl");
+    static Notifier notifier = Notifier.getInstance("whgo_helper gbl");
     static boolean enabled = false;
 
 

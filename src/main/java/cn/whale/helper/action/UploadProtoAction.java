@@ -30,7 +30,7 @@ import java.io.InputStream;
 
 public class UploadProtoAction extends AnAction {
 
-    static Notifier notifier = new Notifier("whgo_helper proto");
+    static Notifier notifier = Notifier.getInstance("whgo_helper proto");
 
     static final String PROTO_SERVICE_URL = "https://proto.develop.meetwhale.com/grpc/source/proto";
 

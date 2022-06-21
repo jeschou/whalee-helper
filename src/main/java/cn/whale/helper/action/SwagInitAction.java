@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SwagInitAction extends AnAction {
 
-    static Notifier notifier = new Notifier("whgo_helper swag");
+    static Notifier notifier = Notifier.getInstance("whgo_helper swag");
 
     static String relative_parent = "../";
 
