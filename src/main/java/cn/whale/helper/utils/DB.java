@@ -31,11 +31,11 @@ public class DB {
         PG_GO_TYPE.put("float8", "float64");
         PG_GO_TYPE.put("bool", "bool");
         PG_GO_TYPE.put("_varchar", "pq.StringArray");
-        PG_GO_TYPE.put("_int", "pq.Int64Array");
-        PG_GO_TYPE.put("_int2", "pq.Int64Array");
-        PG_GO_TYPE.put("_int4", "pq.Int64Array");
+        PG_GO_TYPE.put("_int", "pq.Int32Array");
+        PG_GO_TYPE.put("_int2", "pq.Int32Array");
+        PG_GO_TYPE.put("_int4", "pq.Int32Array");
         PG_GO_TYPE.put("_int8", "pq.Int64Array");
-        PG_GO_TYPE.put("_float4", "pq.Float64Array");
+        PG_GO_TYPE.put("_float4", "pq.Float32Array");
         PG_GO_TYPE.put("_float8", "pq.Float64Array");
         PG_GO_TYPE.put("jsonb", "postgres.Jsonb");
         PG_GO_TYPE.put("json", "string");

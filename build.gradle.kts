@@ -1,7 +1,12 @@
+fun properties(key: String) = project.findProperty(key).toString()
+
 plugins {
     id("java")
-    id("org.jetbrains.intellij") version "1.8.0"
+    id("org.jetbrains.intellij") version "1.9.0"
 }
+
+group = "cn.whale"
+version = properties("pluginVersion")
 
 repositories {
     mavenLocal()
@@ -35,6 +40,9 @@ tasks {
     patchPluginXml {
         sinceBuild.set("201")
         untilBuild.set("223.*")
-        version.set("1.6.4")
+        version.set(properties("pluginVersion"))
+    }
+    buildPlugin{
+        archiveVersion.set(properties("pluginVersion"))
     }
 }

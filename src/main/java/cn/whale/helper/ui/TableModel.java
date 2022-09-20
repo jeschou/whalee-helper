@@ -71,16 +71,20 @@ public class TableModel extends ReorderableTableModel {
     }
 
     private String createTag(DB.Column c) {
-        StringBuilder sb=new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         sb.append("`gorm:\"column:").append(c.name);
-        if( c.isPk ){
+        if (c.isPk) {
             sb.append(";primary_key");
         }
-        if ("created_time".equals(c.name)||"create_time".equals(c.name)) {
+        if ("created_time".equals(c.name) || "create_time".equals(c.name)) {
             sb.append(";autoCreateTime");
         }
-        if ("updated_time".equals(c.name)||"update_time".equals(c.name)) {
+        if ("updated_time".equals(c.name) || "update_time".equals(c.name)) {
             sb.append(";autoCreateTime;autoUpdateTime");
+        }
+        // for gorm v2: array type must declare type
+        if (c.typeName.startsWith("_")) {
+            sb.append(";type:").append(c.typeName.substring(1)).append("[]");
         }
         sb.append("\" json:\"").append(c.name).append("\"`");
         return sb.toString();
