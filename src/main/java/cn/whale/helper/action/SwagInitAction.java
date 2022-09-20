@@ -31,7 +31,7 @@ public class SwagInitAction extends AnAction {
         Presentation presentation = e.getPresentation();
 
         VirtualFile moduleRoot = IDEUtils.getModuleRoot(virtualFile);
-        if (moduleRoot == null || !moduleRoot.getName().endsWith("api-server")) {
+        if (moduleRoot == null || !(moduleRoot.getName().endsWith("api-server") || moduleRoot.getName().endsWith("-bff"))) {
             presentation.setEnabledAndVisible(false);
             return;
         }

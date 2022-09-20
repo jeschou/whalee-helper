@@ -6,7 +6,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 
-import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 
@@ -24,7 +23,6 @@ public class SelectTableDialogWrapper extends DialogWrapper {
         setTitle("Create Dao From Table");
     }
 
-    @Nullable
     @Override
     protected JComponent createCenterPanel() {
         return tableSelector;
