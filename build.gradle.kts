@@ -9,10 +9,10 @@ repositories {
 }
 
 dependencies {
-    testImplementation("junit:junit:4.12")
-    implementation("org.postgresql:postgresql:42.2.14")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.11.2")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.11.2")
+    testImplementation("junit:junit:4.13.2")
+    implementation("org.postgresql:postgresql:42.5.0")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.13.4")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.13.4")
 
 }
 
