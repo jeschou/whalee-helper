@@ -15,7 +15,7 @@ public class NacosUtil {
     }
 
     public static List<DbConfig> getDbConfigList() throws Exception {
-        URL url = new URL("https://nacos.meetwhale.com/nacos/v1/cs/configs?dataId=pg-config&group=DEFAULT&tenant=frameworks-develop");
+        URL url = new URL("http://nacos-dev.meetwhale.com:8848/nacos/v1/cs/configs?dataId=pg-config&group=DEFAULT&tenant=frameworks-develop");
         DbConfig dbconfig = mapper.readValue(url, DbConfig.class);
         dbconfig.serviceName = "default";
         return List.of(dbconfig);
