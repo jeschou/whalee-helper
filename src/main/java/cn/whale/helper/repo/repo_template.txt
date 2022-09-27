@@ -54,6 +54,8 @@ func Get${StructName}Repo() *${structName}Repo {
 			RepositoryInterface:       repoImpl,
 			${structName}RepoFields:   repoFields,
 		}
+		// auto create table, column, index if absence
+		repoImpl.AutoMigrate()
 	})
 	return ${structName}RepoInstance
 }

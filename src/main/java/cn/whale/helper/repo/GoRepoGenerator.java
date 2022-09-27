@@ -148,6 +148,9 @@ public class GoRepoGenerator {
 
     private String guessServiceName() {
         VirtualFile moduleRoot = IDEUtils.getModuleRoot(selectedFile);
+        if (moduleRoot == null) {
+            return "";
+        }
         VirtualFile mainGo = moduleRoot.findChild("main.go");
         if (mainGo == null) {
             return "";
