@@ -34,6 +34,11 @@
                 description="Create gorm repo from database table">
             <add-to-group group-id="NewGroup" anchor="last"/>
         </action>
+        <action id="NewProtoAction" class="cn.whale.helper.action.NewProtoAction" text="New Proto"
+                icon="PluginIcons.PROTOBUF"
+                description="Create new proto file">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
         <action id="BazelGenAction" class="cn.whale.helper.action.BazelUpdateAction" text="Update BUILD.bazel"
                 icon="PluginIcons.BAZEL"
                 description="BazelGenAction desc">

@@ -1,10 +1,9 @@
 package cn.whale.helper.utils;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileFilter;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.jediterm.terminal.TerminalOutputStream;
@@ -12,6 +11,7 @@ import com.jediterm.terminal.ui.TerminalPanel;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -20,6 +20,7 @@ public class IDEUtils {
     public static boolean isGoFile(VirtualFile vf) {
         return !vf.isDirectory() && "go".equals(vf.getExtension());
     }
+
     public static boolean isProtoFile(VirtualFile vf) {
         return !vf.isDirectory() && "proto".equals(vf.getExtension());
     }
@@ -65,6 +66,17 @@ public class IDEUtils {
         return vf;
     }
 
+    public static VirtualFile getGoMod(VirtualFile vf) {
+        while (vf != null) {
+            VirtualFile gomf = vf.findChild("go.mod");
+            if (gomf != null) {
+                return gomf;
+            }
+            vf = vf.getParent();
+        }
+        return null;
+    }
+
     public static void executeInTerminal(Project project, String workingDir, String cmd) {
         ToolWindow terminal = ToolWindowManager.getInstance(project).getToolWindow("Terminal");
         JComponent root = terminal.getComponent();
@@ -105,6 +117,19 @@ public class IDEUtils {
             terminalOutputStream.sendString("cd " + workingDir + "\n");
         }
         terminalOutputStream.sendString(cmd + "\n");
+    }
+
+    public static void createAndOpenVirtualFile(Project project, VirtualFile dir, String fileName, byte[] data) {
+        ApplicationManager.getApplication().runWriteAction(() -> {
+            try {
+                VirtualFile vf = dir.createChildData(project, fileName);
+                vf.setBinaryContent(data);
+                FileEditorManager.getInstance(project).openFile(vf, true);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        });
     }
 
 }

@@ -8,14 +8,12 @@ import cn.whale.helper.utils.GoUtils;
 import cn.whale.helper.utils.IDEUtils;
 import cn.whale.helper.utils.Utils;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import org.apache.commons.lang.StringUtils;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -137,13 +135,13 @@ public class GoRepoGenerator {
 
         File f = new File(targetDir.getPath(), fileName);
         try {
-            Utils.writeFile(f, templateRender.getResult());
-            RefreshQueue.getInstance().refresh(true, true, null, targetDir);
-        } catch (IOException e) {
+            IDEUtils.createAndOpenVirtualFile(project, targetDir, fileName, templateRender.getResult().getBytes(StandardCharsets.UTF_8));
+//            Utils.writeFile(f, templateRender.getResult());
+//            RefreshQueue.getInstance().refresh(true, true, null, targetDir);
+        } catch (Exception e) {
             e.printStackTrace();
             notifier.error(project, Utils.getStackTrace(e));
         }
-
     }
 
     private String guessServiceName() {

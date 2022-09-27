@@ -27,7 +27,7 @@ sourceSets.main.configure {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    localPath.set("/Applications/IntelliJ IDEA.app")
+    localPath.set("/Applications/IntelliJ IDEA CE.app")
 }
 
 tasks {

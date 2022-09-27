@@ -212,6 +212,7 @@ public class Utils {
     public static void writeFile(File f, String text) throws IOException {
         try (FileOutputStream fos = new FileOutputStream(f)) {
             fos.write(text.getBytes());
+            fos.flush();
         }
     }
 
