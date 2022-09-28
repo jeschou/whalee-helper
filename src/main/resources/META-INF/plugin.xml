@@ -24,7 +24,15 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
+        <notificationGroup id="Update Notification"
+                           displayType="BALLOON"
+                           key="notification.group.name"/>
     </extensions>
+    <applicationListeners>
+        <listener class="cn.whale.helper.listener.UpdateCheckService" topic="com.intellij.ide.AppLifecycleListener"/>
+    </applicationListeners>
+
+
 
     <actions>
 

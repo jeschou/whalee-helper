@@ -133,7 +133,6 @@ public class GoRepoGenerator {
 
         templateRender.render(params);
 
-        File f = new File(targetDir.getPath(), fileName);
         try {
             IDEUtils.createAndOpenVirtualFile(project, targetDir, fileName, templateRender.getResult().getBytes(StandardCharsets.UTF_8));
 //            Utils.writeFile(f, templateRender.getResult());
