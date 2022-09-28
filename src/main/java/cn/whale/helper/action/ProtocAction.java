@@ -129,8 +129,10 @@ public class ProtocAction extends AnAction {
             String outPathRelative = ".";
             if (!".".equals(goPackage[0])) {
                 String firstDir = Utils.substringBefore(goPackage[0], "/");
-                if (goPackage[0].startsWith("whgo/product/proto/source")) {
-                    cmdDir = protoFile.getParentFile().getParentFile().getParentFile();
+                if (cmdDir.getAbsolutePath().contains("/proto/")) {
+                    while (!cmdDir.getName().equals("proto")) {
+                        cmdDir = cmdDir.getParentFile();
+                    }
                 }
                 arg = protoFile.getAbsolutePath().substring(cmdDir.getAbsolutePath().length() + 1);
 
