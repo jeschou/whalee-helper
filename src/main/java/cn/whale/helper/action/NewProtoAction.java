@@ -1,7 +1,7 @@
 package cn.whale.helper.action;
 
 import cn.whale.helper.template.SimpleTemplateRender;
-import cn.whale.helper.ui.NewProtoDialog;
+import cn.whale.helper.ui.SimplePopupInput;
 import cn.whale.helper.ui.Notifier;
 import cn.whale.helper.utils.IDEUtils;
 import cn.whale.helper.utils.Utils;
@@ -12,7 +12,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -42,38 +41,35 @@ public class NewProtoAction extends AnAction {
         if (gomodFile == null) {
             return;
         }
-
-        // open file name input dialog
-        NewProtoDialog dialog = new NewProtoDialog(project);
-        SwingUtilities.invokeLater(() -> dialog.textField.grabFocus());
-        if (!dialog.showAndGet()) {
-            return;
-        }
-        String filename = dialog.getFilename();
-
-        try {
-            SimpleTemplateRender template = new SimpleTemplateRender();
-            template.loadTemplate(this.getClass().getResourceAsStream("proto.txt"));
-            Map<String, String> args = new HashMap<>();
-            args.put("serviceName", vDir.getName());
-            args.put("ServiceName", Utils.toTitle(vDir.getName()));
-            List<String> lines = Utils.readLines(gomodFile.getInputStream());
-            String module = null;
-            for (String line : lines) {
-                if (line.startsWith("module")) {
-                    module = Utils.substringAfter(line, "module").trim();
-                    break;
-                }
+        new SimplePopupInput("Input proto file name", "Name", "[\\w_]+").showPopup(project, (filename) -> {
+            if (!filename.endsWith(".proto")) {
+                filename += ".proto";
             }
-            args.put("module", module);
-            String relativePath = vDir.getPath().substring(gomodFile.getParent().getPath().length() + 1);
-            args.put("relativePath", relativePath);
-            template.render(args);
-            String content = template.getResult();
-            IDEUtils.createAndOpenVirtualFile(project, vDir, filename, content.getBytes(StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            notifier.error(project, Utils.getStackTrace(e));
-            e.printStackTrace();
-        }
+            try {
+                SimpleTemplateRender template = new SimpleTemplateRender();
+                template.loadTemplate(this.getClass().getResourceAsStream("proto.txt"));
+                Map<String, String> args = new HashMap<>();
+                args.put("serviceName", vDir.getName());
+                args.put("ServiceName", Utils.toTitle(vDir.getName()));
+                List<String> lines = Utils.readLines(gomodFile.getInputStream());
+                String module = null;
+                for (String line : lines) {
+                    if (line.startsWith("module")) {
+                        module = Utils.substringAfter(line, "module").trim();
+                        break;
+                    }
+                }
+                args.put("module", module);
+                String relativePath = vDir.getPath().substring(gomodFile.getParent().getPath().length() + 1);
+                args.put("relativePath", relativePath);
+                template.render(args);
+                String content = template.getResult();
+                IDEUtils.createAndOpenVirtualFile(project, vDir, filename, content.getBytes(StandardCharsets.UTF_8));
+            } catch (IOException e) {
+                notifier.error(project, Utils.getStackTrace(e));
+                e.printStackTrace();
+            }
+        });
+
     }
 }

@@ -4,11 +4,6 @@ import java.sql.*;
 import java.util.*;
 
 public class DB {
-
-    static String host = "postgres.develop.meetwhale.com";
-    static String port = "5432";
-    static String username = "postgres";
-    static String password = "Buzhongyao123";
     static Map<String, String> PG_GO_TYPE = new HashMap<>();
 
     static {
@@ -119,7 +114,11 @@ public class DB {
         final List<String> list = new ArrayList<>();
         doWithSql((rs, cnames) -> {
             list.add(rs.getString(1));
-        }, config, database, "select tablename from pg_tables where schemaname='public'");
+        }, config, database, "select tablename from pg_tables where schemaname='public' \n" +
+                "and tablename  !~ '_copy\\d*$' \n" +
+                "and tablename  !~ '_partition$' \n" +
+                "and tablename  !~ '\\d{6,}$'\n" +
+                "and tablename  !~ '^deprecated_'");
         Collections.sort(list);
         return list;
     }
