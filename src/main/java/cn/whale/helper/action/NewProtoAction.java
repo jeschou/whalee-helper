@@ -1,8 +1,9 @@
 package cn.whale.helper.action;
 
 import cn.whale.helper.template.SimpleTemplateRender;
-import cn.whale.helper.ui.SimplePopupInput;
 import cn.whale.helper.ui.Notifier;
+import cn.whale.helper.ui.SimplePopupInput;
+import cn.whale.helper.utils.GoUtils;
 import cn.whale.helper.utils.IDEUtils;
 import cn.whale.helper.utils.Utils;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -49,8 +50,15 @@ public class NewProtoAction extends AnAction {
                 SimpleTemplateRender template = new SimpleTemplateRender();
                 template.loadTemplate(this.getClass().getResourceAsStream("proto.txt"));
                 Map<String, String> args = new HashMap<>();
-                args.put("serviceName", vDir.getName());
-                args.put("ServiceName", Utils.toTitle(vDir.getName()));
+                String serviceName = vDir.getName().replace("-", "");
+                args.put("serviceName", serviceName);
+                args.put("ServiceName", Utils.toTitle(serviceName));
+                // reuse same package or new one
+                String pkg = getPackageName(vDir);
+                if (Utils.isEmpty(pkg)) {
+                    pkg = serviceName + "_pb";
+                }
+                args.put("package", pkg);
                 List<String> lines = Utils.readLines(gomodFile.getInputStream());
                 String module = null;
                 for (String line : lines) {
@@ -71,5 +79,13 @@ public class NewProtoAction extends AnAction {
             }
         });
 
+    }
+
+    static String getPackageName(VirtualFile virtualFile) throws IOException {
+        List<VirtualFile> list = IDEUtils.collectChild(virtualFile, IDEUtils::isGoFile);
+        if (list == null || list.isEmpty()) {
+            return "";
+        }
+        return GoUtils.getPackage(IDEUtils.toFile(list.get(0)), true);
     }
 }

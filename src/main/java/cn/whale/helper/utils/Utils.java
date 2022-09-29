@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -134,7 +135,7 @@ public class Utils {
             copy(fis, baos);
         }
 
-        return baos.toString("UTF-8");
+        return baos.toString(StandardCharsets.UTF_8);
     }
 
     public static void copy(InputStream is, OutputStream os) throws IOException {
@@ -485,9 +486,22 @@ public class Utils {
         return new String[]{normalContent, errorContent};
     }
 
-    public static void copyFileTo(File file, OutputStream os) throws FileNotFoundException, IOException {
+    public static void copyFileTo(File file, OutputStream os) throws IOException {
         try (FileInputStream fis = new FileInputStream(file)) {
             copy(fis, os);
         }
+    }
+
+    public static void deleteFile(File f, boolean force) {
+        if (f == null || !f.exists()) return;
+        if (f.isDirectory() && force) {
+            File[] fs = f.listFiles();
+            if (fs != null) {
+                for (File f0 : fs) {
+                    deleteFile(f0, force);
+                }
+            }
+        }
+        f.delete();
     }
 }

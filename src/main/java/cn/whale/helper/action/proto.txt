@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package whale.${serviceName}.proto;
 
-option go_package = "${module}/${relativePath};${serviceName}_pb";
+option go_package = "${module}/${relativePath};${package}";
 
 service ${ServiceName}Service {
 }

@@ -1,5 +1,6 @@
 package cn.whale.helper.listener;
 
+import cn.whale.helper.utils.CloserHolder;
 import cn.whale.helper.utils.Utils;
 import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
@@ -28,6 +29,10 @@ import java.util.function.Consumer;
 
 public class UpdateCheckService implements AppLifecycleListener {
 
+    // the directory where this plugin installed at plugins
+    static final String DIR = "whalee-helper";
+    static final String releaseBase = "https://whale-alivia.oss-cn-hangzhou.aliyuncs.com/whalee-helper/";
+
     static {
         Thread t = new Thread(() -> {
             while (true) {
@@ -52,30 +57,15 @@ public class UpdateCheckService implements AppLifecycleListener {
         return PluginManager.getInstance().findEnabledPlugin(pluginId());
     }
 
-    @Override
-    public void appStarted() {
-        new Thread(() -> {
-            try {
-                // after start up , sleep 30s
-                Thread.sleep(30L * 1000);
-                checkUpdate();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
-    }
-
-
-    static final String releaseBase = "https://whale-alivia.oss-cn-hangzhou.aliyuncs.com/whalee-helper/";
-
     public static synchronized void checkUpdate() {
-        try {
+        try (CloserHolder ch = new CloserHolder()) {
 
             @Nullable IdeaPluginDescriptor plugin = getPlugin();
             if (plugin == null) {
                 return;
             }
             InputStream is = new URL(releaseBase + "latest.txt").openStream();
+            ch.add(is);
             String text = Utils.readText(is).trim();
             if (text.equals(plugin.getVersion())) {
                 return;
@@ -88,14 +78,13 @@ public class UpdateCheckService implements AppLifecycleListener {
 
     static void showPopup(String newVersion, String oldVersion) {
         Notification notify = new Notification("Update Notification", "New version found :", NotificationType.INFORMATION);
-        notify.setTitle("whalee-helper update!");
+        notify.setTitle(DIR + " update!");
         notify.setContent(String.format("new version: %s, current version: %s", newVersion, oldVersion));
 
         notify.addAction(new DownloadUpdateAction("Install Update", newVersion, notify));
         Notifications.Bus.notify(notify);
 
     }
-
 
     /**
      * download with porgress, cancellable
@@ -111,23 +100,23 @@ public class UpdateCheckService implements AppLifecycleListener {
             @Override
             public void run(@NotNull ProgressIndicator progressIndicator) {
 
-                try {
+                try (CloserHolder ch = new CloserHolder()) {
                     progressIndicator.setText("connecting");
                     progressIndicator.setIndeterminate(false);
                     progressIndicator.setFraction(0);
-                    File f = File.createTempFile("whalee-helper", "");
-                    URLConnection uc = new URL(releaseBase + "whalee-helper-" + version + ".zip").openConnection();
+                    File f = File.createTempFile(DIR, "");
+                    URLConnection uc = new URL(releaseBase + DIR + "-" + version + ".zip").openConnection();
                     int length = uc.getContentLength();
                     int downloadedBytes = 0;
                     byte[] buff = new byte[16 * 1024];
-                    InputStream is = new URL(releaseBase + "whalee-helper-" + version + ".zip").openStream();
+                    InputStream is = uc.getInputStream();
                     OutputStream fos = new FileOutputStream(f);
+                    ch.add(is, fos);
                     progressIndicator.setText("Downloading");
                     while (true) {
                         if (progressIndicator.isCanceled()) {
-                            is.close();
-                            fos.close();
-                            f.delete();
+                            ch.close();
+                            Utils.deleteFile(f, false);
                             return;
                         }
                         int len = is.read(buff);
@@ -138,8 +127,7 @@ public class UpdateCheckService implements AppLifecycleListener {
                         fos.write(buff, 0, len);
                         progressIndicator.setFraction(downloadedBytes * 1d / length);
                     }
-                    is.close();
-                    fos.close();
+                    ch.close();
                     onComplete.accept(f);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -150,15 +138,13 @@ public class UpdateCheckService implements AppLifecycleListener {
 
     static void installUpdate(File f) throws IOException {
 
-        String DIR = "whalee-helper";
-
         String classLocation = UpdateCheckService.class.getResource(UpdateCheckService.class.getSimpleName() + ".class").getFile();
         String jarPath = Utils.substringAfter(Utils.substringBefore(classLocation, "!"), "file:");
         jarPath = jarPath.replace("%20", " ");
         File pluginsDir = new File(Utils.substringBeforeLast(jarPath, "/" + DIR + "/"));
 
         // delete old dir
-        deleteFile(new File(pluginsDir, DIR));
+        Utils.deleteFile(new File(pluginsDir, DIR), true);
 
         ZipFile zip = new ZipFile(f);
         Enumeration<ZipEntry> enu = zip.getEntries();
@@ -174,31 +160,30 @@ public class UpdateCheckService implements AppLifecycleListener {
             }
         }
         zip.close();
+        Utils.deleteFile(f, false);
         showRestartPopup();
     }
 
     static void showRestartPopup() {
         Notification notify = new Notification("Update Notification", "New version found :", NotificationType.INFORMATION);
-        notify.setTitle("whalee-helper update success!");
+        notify.setTitle(DIR + " update success!");
         notify.setContent("Restart now or later");
 
         notify.addAction(new RestartIDEAction("Restart"));
         Notifications.Bus.notify(notify);
     }
 
-
-    static void deleteFile(File file) {
-        if (file == null) return;
-
-        if (file.isDirectory()) {
-            File[] fs = file.listFiles();
-            if (fs != null) {
-                for (File f : fs) {
-                    deleteFile(f);
-                }
+    @Override
+    public void appStarted() {
+        new Thread(() -> {
+            try {
+                // after start up , sleep 30s
+                Thread.sleep(30L * 1000);
+                checkUpdate();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        }
-        file.delete();
+        }).start();
     }
 
     static class DownloadUpdateAction extends AnAction {
