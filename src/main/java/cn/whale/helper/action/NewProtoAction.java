@@ -59,14 +59,7 @@ public class NewProtoAction extends AnAction {
                     pkg = serviceName + "_pb";
                 }
                 args.put("package", pkg);
-                List<String> lines = Utils.readLines(gomodFile.getInputStream());
-                String module = null;
-                for (String line : lines) {
-                    if (line.startsWith("module")) {
-                        module = Utils.substringAfter(line, "module").trim();
-                        break;
-                    }
-                }
+                String module = GoUtils.getModuleFromGoMod(gomodFile);
                 args.put("module", module);
                 String relativePath = vDir.getPath().substring(gomodFile.getParent().getPath().length() + 1);
                 args.put("relativePath", relativePath);

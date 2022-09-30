@@ -11,7 +11,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.apache.commons.lang.StringUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -47,6 +46,14 @@ public class GoRepoGenerator {
     }
 
     public void generate() {
+        try {
+            generate0();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void generate0() throws IOException {
         VirtualFile targetDir = selectedFile;
         if (!targetDir.isDirectory()) {
             targetDir = targetDir.getParent();
@@ -175,11 +182,16 @@ public class GoRepoGenerator {
         return moduleRoot.getName().replace("whale-", "");
     }
 
-    private List<String> collectImport() {
+    private List<String> collectImport() throws IOException {
         Set<String> sets = new HashSet<>();
         sets.add("sync");
         sets.add("whgo/product/library/repo");
-        sets.add("whgo/library/frameworks/pgsql");
+        String frameWorkDep = getFrameWorkDep();
+        if (Utils.isEmpty(frameWorkDep)) {
+            sets.add("whgo/library/frameworks/pgsql");
+        } else {
+            sets.add(frameWorkDep + "/frameworks/pgsql");
+        }
         for (TableRowData trd : fields) {
             String goType = trd.goType;
             if (goType.contains("time.")) {
@@ -199,5 +211,20 @@ public class GoRepoGenerator {
         ArrayList<String> imps = new ArrayList<>(sets);
         GoUtils.sortGoImport(imps);
         return imps;
+    }
+
+    String getFrameWorkDep() throws IOException {
+        String tag = "whale/whale-framework";
+        String frameWorkDep = Utils.readFirstLine(IDEUtils.toFile(IDEUtils.getGoMod(project.getBaseDir())), (s) -> s.contains(tag));
+        if (Utils.isEmpty(frameWorkDep)) {
+            return "";
+        }
+        String[] segs = frameWorkDep.trim().split("\\s+");
+        for (String s : segs) {
+            if (s.contains(tag)) {
+                return s;
+            }
+        }
+        return "";
     }
 }

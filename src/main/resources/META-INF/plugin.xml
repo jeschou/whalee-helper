@@ -24,9 +24,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <notificationGroup id="Update Notification"
-                           displayType="BALLOON"
-                           key="notification.group.name"/>
+        <notificationGroup id="Update Notification" displayType="BALLOON"/>
     </extensions>
     <applicationListeners>
         <listener class="cn.whale.helper.listener.UpdateCheckService" topic="com.intellij.ide.AppLifecycleListener"/>
@@ -35,6 +33,12 @@
 
 
     <actions>
+
+        <action id="NewServiceAction" class="cn.whale.helper.action.service.NewServiceAction" text="New Service"
+                icon="PluginIcons.BLOCK"
+                description="Create new micro service">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
 
 
         <action id="NewGormModelAction" class="cn.whale.helper.action.NewGormModelAction" text="New Gorm Repo"

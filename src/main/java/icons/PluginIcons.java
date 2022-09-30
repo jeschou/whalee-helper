@@ -12,4 +12,5 @@ public interface PluginIcons {
     Icon UPLOAD = IconLoader.getIcon("/icons/upload.svg", PluginIcons.class);
     Icon DEPLOY = IconLoader.getIcon("/icons/deploy.svg", PluginIcons.class);
     Icon RANCHER = IconLoader.getIcon("/icons/rancher.svg", PluginIcons.class);
+    Icon BLOCK = IconLoader.getIcon("/icons/blocks.svg", PluginIcons.class);
 }

@@ -1,6 +1,7 @@
 package cn.whale.helper.utils;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.*;
 import java.lang.reflect.Field;

@@ -1,5 +1,7 @@
 package cn.whale.helper.utils;
 
+import com.intellij.openapi.vfs.VirtualFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -68,5 +70,15 @@ public class GoUtils {
             }
         }
         return packageName;
+    }
+
+
+    public static String getModuleFromGoMod(VirtualFile vf) {
+        try {
+            String line = Utils.readFirstLine(IDEUtils.toFile(vf), (s) -> s.startsWith("module "));
+            return Utils.substringAfter(line, "module ").trim();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

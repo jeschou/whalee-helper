@@ -12,6 +12,7 @@ import com.jediterm.terminal.ui.TerminalPanel;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -117,6 +118,18 @@ public class IDEUtils {
             terminalOutputStream.sendString("cd " + workingDir + "\n");
         }
         terminalOutputStream.sendString(cmd + "\n");
+    }
+
+    public static void createVirtualFile(Project project, VirtualFile dir, String fileName, String content) {
+        ApplicationManager.getApplication().runWriteAction(() -> {
+            try {
+                VirtualFile vf = dir.createChildData(project, fileName);
+                vf.setBinaryContent(content.getBytes(StandardCharsets.UTF_8));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        });
     }
 
     public static void createAndOpenVirtualFile(Project project, VirtualFile dir, String fileName, byte[] data) {

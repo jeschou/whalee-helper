@@ -31,18 +31,16 @@ public class SelectTableDialogWrapper extends DialogWrapper {
     @org.jetbrains.annotations.Nullable
     @Override
     protected ValidationInfo doValidate() {
-        if (Utils.isEmpty(tableSelector.repoNameInput.getText())) {
+        if (Utils.isEmpty(getFileName())) {
             return new ValidationInfo("Please input filename", tableSelector.repoNameInput);
         }
-        String db = (String) tableSelector.databaseCombox.getSelectedItem();
-        if (Utils.isEmpty(db)) {
+        if (Utils.isEmpty(getDatabase())) {
             return new ValidationInfo("Please select database", tableSelector.databaseCombox);
         }
-        String table = (String) tableSelector.tableCombox.getSelectedItem();
-        if (Utils.isEmpty(table)) {
+        if (Utils.isEmpty(getTableName())) {
             return new ValidationInfo("Please select table", tableSelector.tableCombox);
         }
-        if (Utils.isEmpty(tableSelector.structNameInput.getText())) {
+        if (Utils.isEmpty(getStructName())) {
             return new ValidationInfo("Please struct name", tableSelector.structNameInput);
         }
         if (getColumnData().size() == 0) {
