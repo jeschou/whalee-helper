@@ -31,7 +31,6 @@
     </applicationListeners>
 
 
-
     <actions>
 
         <action id="NewServiceAction" class="cn.whale.helper.action.service.NewServiceAction" text="New Service"
@@ -80,6 +79,11 @@
                 description="description">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
+        <action id="test_grpc" class="cn.whale.helper.action.TestGrpcAction" text="test grpc"
+                icon="PluginIcons.PROTOBUF"
+                description="test grpc">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
 
         <action id="BazelGenAction_popup" class="cn.whale.helper.action.BazelUpdateAction" text="Update BUILD.bazel"
                 icon="PluginIcons.BAZEL"
@@ -96,42 +100,42 @@
                 description="execute swag init">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
-<!--        <action id="GblAction_popup" class="cn.whale.helper.action.experimental.GblOssAction" text="gbl_oss"-->
-<!--                icon="PluginIcons.SWAG"-->
-<!--                description="gbl and oss">-->
-<!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
-<!--        </action>-->
-<!--        <action id="DeployAction_popup" class="cn.whale.helper.action.experimental.DeployAction" text="deploy rancher"-->
-<!--                icon="PluginIcons.RANCHER"-->
-<!--                description="deploy to rancher">-->
-<!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
-<!--        </action>-->
-<!--        <action id="DeployLocalAction_popup" class="cn.whale.helper.action.experimental.DeployLocalAction" text="deploy local"-->
-<!--                icon="PluginIcons.DEPLOY"-->
-<!--                description="deploy to hmac">-->
-<!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
-<!--        </action>-->
-<!--        <action id="Trans2Grpc_popup" class="cn.whale.helper.action.experimental.TransGrpcAction" text="Micro 2 Grpc"-->
-<!--                icon="PluginIcons.SWAG"-->
-<!--                description="Micro 2 Grpc">-->
-<!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
-<!--        </action>-->
+        <!--        <action id="GblAction_popup" class="cn.whale.helper.action.experimental.GblOssAction" text="gbl_oss"-->
+        <!--                icon="PluginIcons.SWAG"-->
+        <!--                description="gbl and oss">-->
+        <!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+        <!--        </action>-->
+        <!--        <action id="DeployAction_popup" class="cn.whale.helper.action.experimental.DeployAction" text="deploy rancher"-->
+        <!--                icon="PluginIcons.RANCHER"-->
+        <!--                description="deploy to rancher">-->
+        <!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+        <!--        </action>-->
+        <!--        <action id="DeployLocalAction_popup" class="cn.whale.helper.action.experimental.DeployLocalAction" text="deploy local"-->
+        <!--                icon="PluginIcons.DEPLOY"-->
+        <!--                description="deploy to hmac">-->
+        <!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+        <!--        </action>-->
+        <!--        <action id="Trans2Grpc_popup" class="cn.whale.helper.action.experimental.TransGrpcAction" text="Micro 2 Grpc"-->
+        <!--                icon="PluginIcons.SWAG"-->
+        <!--                description="Micro 2 Grpc">-->
+        <!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+        <!--        </action>-->
         <action id="BazelGenAction_popup2" class="cn.whale.helper.action.BazelUpdateAction" text="Update BUILD.bazel"
                 icon="PluginIcons.BAZEL"
                 description="BazelGenAction desc">
             <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>
         </action>
 
-<!--        <action id="whgo.proto.upload.action" class="cn.whale.helper.action.UploadProtoAction" text="Upload Proto"-->
-<!--                icon="PluginIcons.UPLOAD"-->
-<!--                description="description">-->
-<!--            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>-->
-<!--        </action>-->
-<!--        <action id="whgo.proto.upload.action2" class="cn.whale.helper.action.UploadProtoAction" text="Upload Proto"-->
-<!--                icon="PluginIcons.UPLOAD"-->
-<!--                description="gbl and oss">-->
-<!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
-<!--        </action>-->
+        <!--        <action id="whgo.proto.upload.action" class="cn.whale.helper.action.UploadProtoAction" text="Upload Proto"-->
+        <!--                icon="PluginIcons.UPLOAD"-->
+        <!--                description="description">-->
+        <!--            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>-->
+        <!--        </action>-->
+        <!--        <action id="whgo.proto.upload.action2" class="cn.whale.helper.action.UploadProtoAction" text="Upload Proto"-->
+        <!--                icon="PluginIcons.UPLOAD"-->
+        <!--                description="gbl and oss">-->
+        <!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+        <!--        </action>-->
 
     </actions>
 

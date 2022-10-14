@@ -1,7 +1,9 @@
 package cn.whale.helper.utils;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -16,6 +18,12 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class Utils {
+    public final static ObjectMapper mapper = new ObjectMapper();
+
+    static {
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+    }
 
     /**
      * @param str null safe
@@ -180,8 +188,7 @@ public class Utils {
         try (BufferedReader br = reader(f)) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (filter == null || line.contains(filter))
-                    list.add(line);
+                if (filter == null || line.contains(filter)) list.add(line);
             }
         }
         return list;
@@ -192,8 +199,7 @@ public class Utils {
         try (BufferedReader br = reader(f)) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (breakTest.apply(line))
-                    return list;
+                if (breakTest.apply(line)) return list;
                 list.add(line);
             }
         }
@@ -204,8 +210,7 @@ public class Utils {
         try (BufferedReader br = reader(f)) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (predicate.test(line))
-                    return line;
+                if (predicate.test(line)) return line;
             }
         }
         return null;

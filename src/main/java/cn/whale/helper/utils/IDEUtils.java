@@ -2,6 +2,7 @@ package cn.whale.helper.utils;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
@@ -123,7 +124,10 @@ public class IDEUtils {
     public static void createVirtualFile(Project project, VirtualFile dir, String fileName, String content) {
         ApplicationManager.getApplication().runWriteAction(() -> {
             try {
-                VirtualFile vf = dir.createChildData(project, fileName);
+                VirtualFile vf = dir.findChild(fileName);
+                if (vf == null) {
+                    vf = dir.createChildData(project, fileName);
+                }
                 vf.setBinaryContent(content.getBytes(StandardCharsets.UTF_8));
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -132,12 +136,31 @@ public class IDEUtils {
         });
     }
 
-    public static void createAndOpenVirtualFile(Project project, VirtualFile dir, String fileName, byte[] data) {
+    /**
+     * create new file or update exists file<br>
+     * and open it in editor
+     *
+     * @param project
+     * @param dir
+     * @param fileName
+     * @param data
+     * @param loc      [0,0] is first line first col
+     */
+    public static void createAndOpenVirtualFile(Project project, VirtualFile dir, String fileName, byte[] data, int... loc) {
         ApplicationManager.getApplication().runWriteAction(() -> {
             try {
-                VirtualFile vf = dir.createChildData(project, fileName);
+                // update or create new
+                VirtualFile vf = dir.findChild(fileName);
+                if (vf == null) {
+                    vf = dir.createChildData(project, fileName);
+                }
                 vf.setBinaryContent(data);
-                FileEditorManager.getInstance(project).openFile(vf, true);
+                //FileEditorManager.getInstance(project).openFile(vf, true);
+                int[] loc0 = loc;
+                if (loc0 == null || loc0.length == 0) {
+                    loc0 = new int[]{1, 1};
+                }
+                FileEditorManager.getInstance(project).openEditor(new OpenFileDescriptor(project, vf, loc0[0], loc0[1]), true);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
