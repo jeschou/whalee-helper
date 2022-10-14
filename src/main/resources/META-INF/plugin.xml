@@ -39,7 +39,6 @@
             <add-to-group group-id="NewGroup" anchor="last"/>
         </action>
 
-
         <action id="NewGormModelAction" class="cn.whale.helper.action.NewGormModelAction" text="New Gorm Repo"
                 icon="PluginIcons.REPO"
                 description="Create gorm repo from database table">
@@ -53,7 +52,9 @@
         <action id="BazelGenAction" class="cn.whale.helper.action.BazelUpdateAction" text="Update BUILD.bazel"
                 icon="PluginIcons.BAZEL"
                 description="BazelGenAction desc">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+            <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>
         </action>
         <action id="RecursiveBazelGenAction" class="cn.whale.helper.action.RecursiveBazelUpdateAction"
                 text="Recursive Update BUILD.bazel"
@@ -64,6 +65,7 @@
         <action id="BazelBuildAction_popup2" class="cn.whale.helper.action.BazelBuildAction" text="bazel build"
                 icon="PluginIcons.BAZEL"
                 description="execute bazel build">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
 
@@ -71,30 +73,17 @@
                 icon="PluginIcons.PROTOBUF"
                 description="description">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-        </action>
-
-
-        <action id="whgo.generate.proto.action4" class="cn.whale.helper.action.ProtocAction" text="Protoc"
-                icon="PluginIcons.PROTOBUF"
-                description="description">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
+
         <action id="test_grpc" class="cn.whale.helper.action.TestGrpcAction" text="test grpc"
                 icon="PluginIcons.PROTOBUF"
                 description="test grpc">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
         </action>
 
-        <action id="BazelGenAction_popup" class="cn.whale.helper.action.BazelUpdateAction" text="Update BUILD.bazel"
-                icon="PluginIcons.BAZEL"
-                description="BazelGenAction desc">
-            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-        </action>
-        <action id="BazelBuildAction_popup" class="cn.whale.helper.action.BazelBuildAction" text="bazel build"
-                icon="PluginIcons.BAZEL"
-                description="execute bazel build">
-            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-        </action>
+
         <action id="SwagAction_popup" class="cn.whale.helper.action.SwagInitAction" text="swag init"
                 icon="PluginIcons.SWAG"
                 description="execute swag init">
@@ -120,12 +109,6 @@
         <!--                description="Micro 2 Grpc">-->
         <!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
         <!--        </action>-->
-        <action id="BazelGenAction_popup2" class="cn.whale.helper.action.BazelUpdateAction" text="Update BUILD.bazel"
-                icon="PluginIcons.BAZEL"
-                description="BazelGenAction desc">
-            <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>
-        </action>
-
         <!--        <action id="whgo.proto.upload.action" class="cn.whale.helper.action.UploadProtoAction" text="Upload Proto"-->
         <!--                icon="PluginIcons.UPLOAD"-->
         <!--                description="description">-->

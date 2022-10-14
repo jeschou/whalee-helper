@@ -144,7 +144,7 @@ public class IDEUtils {
      * @param dir
      * @param fileName
      * @param data
-     * @param loc      [0,0] is first line first col
+     * @param loc      default [0,0] is first line first col
      */
     public static void createAndOpenVirtualFile(Project project, VirtualFile dir, String fileName, byte[] data, int... loc) {
         ApplicationManager.getApplication().runWriteAction(() -> {
@@ -158,7 +158,7 @@ public class IDEUtils {
                 //FileEditorManager.getInstance(project).openFile(vf, true);
                 int[] loc0 = loc;
                 if (loc0 == null || loc0.length == 0) {
-                    loc0 = new int[]{1, 1};
+                    loc0 = new int[]{0, 0};
                 }
                 FileEditorManager.getInstance(project).openEditor(new OpenFileDescriptor(project, vf, loc0[0], loc0[1]), true);
             } catch (IOException e) {
