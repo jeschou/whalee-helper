@@ -55,7 +55,7 @@ public class ProtoMeta {
                 parseDep(imp);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 

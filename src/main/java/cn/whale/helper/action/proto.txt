@@ -5,4 +5,5 @@ package whale.${serviceName}.proto;
 option go_package = "${module}/${relativePath};${package}";
 
 service ${ServiceName}Service {
+${indent}
 }

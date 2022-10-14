@@ -53,6 +53,7 @@ public class NewProtoAction extends AnAction {
                 String serviceName = vDir.getName().replace("-", "");
                 args.put("serviceName", serviceName);
                 args.put("ServiceName", Utils.toTitle(serviceName));
+                args.put("indent", "  ");
                 // reuse same package or new one
                 String pkg = getPackageName(vDir);
                 if (Utils.isEmpty(pkg)) {
@@ -65,7 +66,7 @@ public class NewProtoAction extends AnAction {
                 args.put("relativePath", relativePath);
                 template.render(args);
                 String content = template.getResult();
-                IDEUtils.createAndOpenVirtualFile(project, vDir, filename, content.getBytes(StandardCharsets.UTF_8));
+                IDEUtils.createAndOpenVirtualFile(project, vDir, filename, content.getBytes(StandardCharsets.UTF_8), 7, 4);
             } catch (IOException e) {
                 notifier.error(project, Utils.getStackTrace(e));
                 e.printStackTrace();
