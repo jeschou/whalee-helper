@@ -1,5 +1,6 @@
 package cn.whale.helper.utils;
 
+import com.intellij.ide.projectView.ProjectView;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
@@ -161,6 +162,7 @@ public class IDEUtils {
                     loc0 = new int[]{0, 0};
                 }
                 FileEditorManager.getInstance(project).openEditor(new OpenFileDescriptor(project, vf, loc0[0], loc0[1]), true);
+                ProjectView.getInstance(project).select(project, vf, false);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

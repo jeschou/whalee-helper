@@ -40,7 +40,7 @@ tasks {
 
     patchPluginXml {
         sinceBuild.set("201")
-        untilBuild.set("223.*")
+        untilBuild.set("999.*")
         version.set(properties("pluginVersion"))
     }
     buildPlugin{

@@ -9,4 +9,11 @@
 2. go mod tiy
 3. go run main.go
 
-#
+# jenkins
+
+```
+# working dir: git repository root
+
+bash ${servicePath}/build.sh
+
+```
