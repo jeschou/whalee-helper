@@ -58,6 +58,18 @@ public class GoUtils {
         });
     }
 
+    public static void sortGoImportWithAlias(List<String[]> imports) {
+        imports.sort((a, b) -> {
+            if (a[0].contains(".") && !b[0].contains(".")) {
+                return 1;
+            }
+            if (!a[0].contains(".") && b[0].contains(".")) {
+                return -1;
+            }
+            return a[0].compareTo(b[0]);
+        });
+    }
+
     public static String getPackage(File f, boolean trim_test) throws IOException {
         String packageLine = Utils.readFirstLine(f, s -> s.startsWith("package "));
         if (packageLine == null) {
@@ -70,6 +82,17 @@ public class GoUtils {
             }
         }
         return packageName;
+    }
+
+    public static String getGoPackage(VirtualFile vf) throws IOException {
+        if (vf.isDirectory()) {
+            List<VirtualFile> goFiles = IDEUtils.collectChild(vf, IDEUtils::isGoFile);
+            if (goFiles.isEmpty()) {
+                return vf.getName().toLowerCase().replace("-", "_");
+            }
+            return getPackage(IDEUtils.toFile(goFiles.get(0)), true);
+        }
+        return getPackage(IDEUtils.toFile(vf), true);
     }
 
 

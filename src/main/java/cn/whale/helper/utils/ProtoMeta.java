@@ -23,6 +23,8 @@ public class ProtoMeta {
      */
     public Map<String, TypeElement> typeMaps = new HashMap<>();
 
+    public Map<String, ProtoFileElement> elementFileMaps = new HashMap<>();
+
     public ProtoMeta(String base) {
         this.base = base;
     }
@@ -50,7 +52,11 @@ public class ProtoMeta {
             String text = Utils.readText(new File(loc.getBase(), loc.getPath()));
             ProtoFileElement pf = ProtoParser.Companion.parse(loc, text);
             // this is  different with parse
-            pf.getTypes().forEach(e -> typeMaps.put(pf.getPackageName() + "." + e.getName(), e));
+            pf.getTypes().forEach(e -> {
+                String externalName = pf.getPackageName() + "." + e.getName();
+                typeMaps.put(externalName, e);
+                elementFileMaps.put(externalName, pf);
+            });
             for (String imp : pf.getImports()) {
                 parseDep(imp);
             }
