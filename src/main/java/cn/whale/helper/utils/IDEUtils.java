@@ -10,6 +10,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.jediterm.terminal.TerminalOutputStream;
 import com.jediterm.terminal.ui.TerminalPanel;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -125,10 +126,7 @@ public class IDEUtils {
     public static void createVirtualFile(Project project, VirtualFile dir, String fileName, String content) {
         ApplicationManager.getApplication().runWriteAction(() -> {
             try {
-                VirtualFile vf = dir.findChild(fileName);
-                if (vf == null) {
-                    vf = dir.createChildData(project, fileName);
-                }
+                VirtualFile vf = findOrCreateChild(project, dir, fileName);
                 vf.setBinaryContent(content.getBytes(StandardCharsets.UTF_8));
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -151,10 +149,7 @@ public class IDEUtils {
         ApplicationManager.getApplication().runWriteAction(() -> {
             try {
                 // update or create new
-                VirtualFile vf = dir.findChild(fileName);
-                if (vf == null) {
-                    vf = dir.createChildData(project, fileName);
-                }
+                VirtualFile vf = findOrCreateChild(project, dir, fileName);
                 vf.setBinaryContent(data);
                 //FileEditorManager.getInstance(project).openFile(vf, true);
                 int[] loc0 = loc;
@@ -168,6 +163,14 @@ public class IDEUtils {
             }
 
         });
+    }
+
+    public static VirtualFile findOrCreateChild(Project project, VirtualFile dir, String fileName) throws IOException {
+        @Nullable VirtualFile vf = dir.findChild(fileName);
+        if (vf == null) {
+            vf = dir.createChildData(project, fileName);
+        }
+        return vf;
     }
 
 }

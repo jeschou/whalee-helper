@@ -156,6 +156,8 @@ public class ProtoMeta {
             put("is_delete", 0);
             put("is_deleted", 0);
             put("bind_zone_id", 3605190);
+            put("client_id", "alivia");
+            put("client_secret", "s&WZ^410^s");
         }
     };
 

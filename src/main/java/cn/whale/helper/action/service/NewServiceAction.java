@@ -117,7 +117,7 @@ public class NewServiceAction extends AnAction {
         SimpleTemplateRender mainRender = new SimpleTemplateRender();
         mainRender.loadTemplate(getClass().getResourceAsStream(tpl));
         mainRender.render(args);
-        VirtualFile vf = dir.createChildData(project, fileName);
+        VirtualFile vf = IDEUtils.findOrCreateChild(project, dir, fileName);
         vf.setBinaryContent(mainRender.getResult().getBytes(StandardCharsets.UTF_8));
         return vf;
     }
