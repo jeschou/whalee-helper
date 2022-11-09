@@ -9,11 +9,20 @@
 2. go mod tiy
 3. go run main.go
 
-# jenkins
+# jenkins 构建脚本
 
-```
+```bash
 # working dir: git repository root
 
-bash ${servicePath}/build.sh
+export GOROOT=/root/sdk/infra/go
+export GOPATH=/var/lib/jenkins/go
+export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
+export GOPROXY=https://goproxy.cn
+export GO111MODULE=on
+
+export JENKINS_ENV=bazel
+
+cd ${servicePath}
+chmod + x build.sh && . ./build.sh
 
 ```

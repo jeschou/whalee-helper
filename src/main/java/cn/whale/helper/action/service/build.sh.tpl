@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
 
-# 在服务根目录执行此文件
+# execute this script under service root, INLINE MODE
+# chmod +x build.sh && . ./build.sh
 
-BUILD_TAG=$BUILD_ID-$(git rev-parse --short HEAD)
 if [ "$IMAGE_DOMAIN" == ""]; then
   IMAGE_DOMAIN="whale-registry.meetwhale.com"
 fi
 
-IMAGE_NAME = $IMAGE_DOMAIN/meetwhale/${serviceName}:$BUILD_TAG
+POD_NAME = "${serviceName}"
 
-echo "IMAGE_NAME: $IMAGE_NAME"
+IMAGE_NAME = $IMAGE_DOMAIN/$POD_NAME
+
+# execute ci.sh INLINE MODE
+curl -fsSL http://proto.data.meetwhale.com:30380/proto/infra/ci.sh/ci.sh -o ci.sh && chmod +x ci.sh && . ./ci.sh
+
+# now $REPORT_IMAGE_NAME is available
 
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ${serviceName} *.go
 
@@ -21,7 +26,7 @@ else
 fi
 
 docker login -u $REGISTRY_USER -p $REGISTRY_PASSWD $IMAGE_DOMAIN
-docker build --build-arg -f Dockerfile -t $IMAGE_NAME --no-cache .
+docker build -f Dockerfile -t $REPORT_IMAGE_NAME --no-cache .
 
 if [ $? -ne 0 ]; then
     echo "docker build failed"
@@ -30,4 +35,4 @@ else
     echo "docker build success"
 fi
 
-docker push $IMAGE_NAME
+docker push $REPORT_IMAGE_NAME

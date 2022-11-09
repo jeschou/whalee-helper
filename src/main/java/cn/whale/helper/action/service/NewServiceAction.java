@@ -72,25 +72,23 @@ public class NewServiceAction extends AnAction {
 
             ApplicationManager.getApplication().runWriteAction(() -> {
                 try {
-                    VirtualFile serviceRoot = virtualFile.createChildDirectory(project, serviceName);
+                    VirtualFile serviceRoot = IDEUtils.findOrCreateDir(project, virtualFile, serviceName);
                     args.put("servicePath", serviceRoot.getPath().substring(projectRoot.getPath().length() + 1));
-                    VirtualFile grpc = serviceRoot.createChildDirectory(project, "grpc");
-                    VirtualFile service = serviceRoot.createChildDirectory(project, "service");
+                    VirtualFile grpc = IDEUtils.findOrCreateDir(project, serviceRoot, "grpc");
+                    VirtualFile service = IDEUtils.findOrCreateDir(project, serviceRoot, "service");
 
 
                     if ("whgo".equals(projectModule)) {
-                        args.put("whgo", "whgo");
                         String rootRelative = serviceRoot.getPath().substring(projectRoot.getPath().length() + 1);
                         args.put("protoPackage", "whgo/proto/" + shortName);
                         String whgoRelative = StringUtils.repeat("../", rootRelative.split("/").length);
                         args.put("whgoRelativePath", whgoRelative);
-                        args.put("libraryRelativePath", whgoRelative + "library");
                         // create proto in /whgo/proto/xx
-                        @NotNull VirtualFile protoDir = projectRoot.findChild("proto").createChildDirectory(project, shortName);
+                        @NotNull VirtualFile protoDir = IDEUtils.findOrCreateDir(project, projectRoot.findChild("proto"), shortName);
                         createVF(project, protoDir, shortName + ".proto", "proto.tpl", args);       //  proto/xx.proto
                     } else {
                         args.put("protoPackage", "whgo/proto/" + shortName);
-                        VirtualFile proto = serviceRoot.createChildDirectory(project, "proto");
+                        VirtualFile proto = IDEUtils.findOrCreateDir(project, serviceRoot, "proto");
                         createVF(project, proto, shortName + ".proto", "proto.tpl", args);       //  proto/xx.proto
                         createVF(project, proto, "go.mod", "proto.go.mod.tpl", args);             //  proto/go.mod
                     }
@@ -100,7 +98,7 @@ public class NewServiceAction extends AnAction {
                     createVF(project, serviceRoot, "go.mod", "go.mod.tpl", args);
                     createVF(project, serviceRoot, "Dockerfile", "Dockerfile.tpl", args);
                     createVF(project, serviceRoot, "build.sh", "build.sh.tpl", args);
-                    VirtualFile whaleDir = serviceRoot.createChildDirectory(project, ".whale");
+                    VirtualFile whaleDir = IDEUtils.findOrCreateDir(project, serviceRoot, ".whale");
                     createVF(project, whaleDir, "info", "info.tpl", args);
 
                     VirtualFile readme = createVF(project, serviceRoot, "README.md", "readme.tpl", args);
@@ -117,7 +115,7 @@ public class NewServiceAction extends AnAction {
         SimpleTemplateRender mainRender = new SimpleTemplateRender();
         mainRender.loadTemplate(getClass().getResourceAsStream(tpl));
         mainRender.render(args);
-        VirtualFile vf = IDEUtils.findOrCreateChild(project, dir, fileName);
+        VirtualFile vf = IDEUtils.findOrCreateFile(project, dir, fileName);
         vf.setBinaryContent(mainRender.getResult().getBytes(StandardCharsets.UTF_8));
         return vf;
     }

@@ -126,7 +126,7 @@ public class IDEUtils {
     public static void createVirtualFile(Project project, VirtualFile dir, String fileName, String content) {
         ApplicationManager.getApplication().runWriteAction(() -> {
             try {
-                VirtualFile vf = findOrCreateChild(project, dir, fileName);
+                VirtualFile vf = findOrCreateFile(project, dir, fileName);
                 vf.setBinaryContent(content.getBytes(StandardCharsets.UTF_8));
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -149,7 +149,7 @@ public class IDEUtils {
         ApplicationManager.getApplication().runWriteAction(() -> {
             try {
                 // update or create new
-                VirtualFile vf = findOrCreateChild(project, dir, fileName);
+                VirtualFile vf = findOrCreateFile(project, dir, fileName);
                 vf.setBinaryContent(data);
                 //FileEditorManager.getInstance(project).openFile(vf, true);
                 int[] loc0 = loc;
@@ -165,10 +165,18 @@ public class IDEUtils {
         });
     }
 
-    public static VirtualFile findOrCreateChild(Project project, VirtualFile dir, String fileName) throws IOException {
+    public static VirtualFile findOrCreateFile(Project project, VirtualFile dir, String fileName) throws IOException {
         @Nullable VirtualFile vf = dir.findChild(fileName);
         if (vf == null) {
             vf = dir.createChildData(project, fileName);
+        }
+        return vf;
+    }
+
+    public static VirtualFile findOrCreateDir(Project project, VirtualFile dir, String fileName) throws IOException {
+        @Nullable VirtualFile vf = dir.findChild(fileName);
+        if (vf == null) {
+            vf = dir.createChildDirectory(project, fileName);
         }
         return vf;
     }

@@ -3,9 +3,10 @@ module ${serviceModule}
 go 1.17
 
 replace (
-	gitlab.meetwhale.com/whale/whale-framework => $!{libraryRelativePath}
+	gitlab.meetwhale.com/whale/whale-framework => $!{whgoRelativePath}library
 	google.golang.org/grpc => google.golang.org/grpc v1.26.0
-	$!{whgo} => $!{whgoRelativePath}
+	whgo => $!{whgoRelativePath}
+	meetwhale.com/snapshot => $!{whgoRelative}infra/satelites/kubernetes/snapshot
 )
 
 require (
