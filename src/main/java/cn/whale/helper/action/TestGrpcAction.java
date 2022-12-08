@@ -121,7 +121,9 @@ public class TestGrpcAction extends AnAction {
 
         StringBuilder sb = new StringBuilder();
         sb.append("###\n");
-        sb.append("GRPC 127.0.0.1:50051/").append(fullName).append("\n\n");
+        sb.append("GRPC 127.0.0.1:50051/").append(fullName).append("\n");
+        sb.append("lang: zh-CN\n"); // 暗示用户, 可以通过 header 指定 语言环境
+        sb.append("\n");
         try {
             sb.append(Utils.mapper.writeValueAsString(rpcSchema.protoMeta.toJsonMap(rpcSchema.protoMeta.typeMaps.get(reqType))));
             sb.append("\n");

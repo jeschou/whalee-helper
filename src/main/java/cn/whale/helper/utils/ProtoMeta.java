@@ -5,9 +5,11 @@ import com.squareup.wire.schema.Location;
 import com.squareup.wire.schema.internal.parser.*;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * parse proto file and its imports
@@ -65,6 +67,42 @@ public class ProtoMeta {
         }
     }
 
+    private static void loadDefaultValueCfg() {
+        File f = new File(System.getProperty("user.home"), ".whalee-helper.properties");
+        if (!f.isFile()) {
+            return;
+        }
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream(f));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        properties.forEach((k, v) -> {
+            if (!(k instanceof String) || !(v instanceof String)) {
+                return;
+            }
+            if (!k.toString().startsWith("grpc.default.")) {
+                return;
+            }
+            String ks = k.toString().substring(13).trim();
+            String vs = v.toString().trim();
+            if (vs.startsWith("\"") && vs.endsWith("\"")) {
+                defaultValue.put(ks, Utils.substrBetweenQuote(vs));
+            } else if (vs.equals("true") || vs.equals("false")) {
+                defaultValue.put(ks, Boolean.parseBoolean(vs));
+            } else {
+                try {
+                    defaultValue.put(ks, Double.parseDouble(vs));
+                } catch (NumberFormatException e) {
+                    defaultValue.put(ks, vs);
+                }
+            }
+        });
+    }
+
     /**
      * get a nested map (with default value), represent the logical structure of TypeElement
      *
@@ -72,6 +110,7 @@ public class ProtoMeta {
      * @return
      */
     public Map<String, Object> toJsonMap(TypeElement typeElement) {
+        loadDefaultValueCfg();
         Map<String, Object> map = new HashMap<>();
         if (typeElement instanceof MessageElement) {
             for (FieldElement field : ((MessageElement) typeElement).getFields()) {
