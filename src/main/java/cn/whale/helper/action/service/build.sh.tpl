@@ -3,13 +3,13 @@
 # execute this script under service root, INLINE MODE
 # chmod +x build.sh && . ./build.sh
 
-if [ "$IMAGE_DOMAIN" == ""]; then
+if [ -z "$IMAGE_DOMAIN" ]; then
   IMAGE_DOMAIN="whale-registry.meetwhale.com"
 fi
 
-POD_NAME = "${serviceName}"
+POD_NAME="${serviceName}"
 
-IMAGE_NAME = $IMAGE_DOMAIN/$POD_NAME
+IMAGE_NAME="$IMAGE_DOMAIN/meetwhale"
 
 # execute ci.sh INLINE MODE
 curl -fsSL http://proto.data.meetwhale.com:30380/proto/infra/ci.sh/ci.sh -o ci.sh && chmod +x ci.sh && . ./ci.sh

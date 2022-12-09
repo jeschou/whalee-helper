@@ -23,6 +23,6 @@ export GO111MODULE=on
 export JENKINS_ENV=bazel
 
 cd ${servicePath}
-chmod + x build.sh && . ./build.sh
+chmod +x build.sh && . ./build.sh
 
 ```
