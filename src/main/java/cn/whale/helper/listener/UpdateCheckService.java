@@ -16,8 +16,6 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.util.NlsActions;
-import org.apache.tools.zip.ZipEntry;
-import org.apache.tools.zip.ZipFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +24,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.function.Consumer;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class UpdateCheckService implements AppLifecycleListener {
 
@@ -147,7 +147,7 @@ public class UpdateCheckService implements AppLifecycleListener {
         Utils.deleteFile(new File(pluginsDir, DIR), true);
 
         ZipFile zip = new ZipFile(f);
-        Enumeration<ZipEntry> enu = zip.getEntries();
+        Enumeration<? extends ZipEntry> enu = zip.entries();
         while (enu.hasMoreElements()) {
             ZipEntry entry = enu.nextElement();
             if (entry.isDirectory()) {

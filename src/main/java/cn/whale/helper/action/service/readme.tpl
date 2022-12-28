@@ -19,6 +19,7 @@ export GOPATH=/var/lib/jenkins/go
 export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 export GOPROXY=https://goproxy.cn
 export GO111MODULE=on
+export GOPRIVATE="gitlab.meetwhale.com,meetwhale.com"
 
 export JENKINS_ENV=bazel
 
