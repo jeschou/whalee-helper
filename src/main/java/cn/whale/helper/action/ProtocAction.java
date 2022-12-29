@@ -159,7 +159,7 @@ public class ProtocAction extends AnAction {
                 //notifier.info(project, normalContent);
             }
             if (Utils.isNotEmpty(cmdOutput[1])) {
-                notifier.error(project, String.format("working dir:%s\ncmd:%s\n%s", cmdDir, cmd, cmdOutput[1]));
+                notifier.error(project, String.format("working dir:%s\ncmd:%s\n%s\n%s", cmdDir, cmd, cmdOutput[1], suggestMsg(cmdOutput[1])));
             } else {
                 notifier.info(project, String.format("working dir:%s\ncmd:%s\ncompile %s success", cmdDir, cmd, arg));
             }
@@ -168,5 +168,26 @@ public class ProtocAction extends AnAction {
             e.printStackTrace();
             notifier.error(project, Utils.getStackTrace(e));
         }
+    }
+
+    private String suggestMsg(String errMsg) {
+        if (Utils.isWindows()) {
+            return "";
+        }
+        String sh = Utils.getLoginShell();
+        sh = Utils.substringAfterLast(sh, "/");
+        if (Utils.isEmpty(sh)) {
+            return "";
+        }
+        String command = "";
+        if (errMsg.contains("command not found: protoc")) {
+            command = "protoc";
+        } else if (errMsg.contains("protoc-gen-go: program not found")) {
+            command = "protoc-gen-go";
+        }
+        if (Utils.isEmpty(command)) {
+            return "";
+        }
+        return "You must config PATH in ~/." + sh + "rc, make sure " + command + " can be found in this PATH";
     }
 }
