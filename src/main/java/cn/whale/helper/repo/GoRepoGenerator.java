@@ -138,6 +138,19 @@ public class GoRepoGenerator {
         params.put("imports", impsSb.toString());
         params.put("serviceName", guessServiceName());
 
+        Properties properties = Utils.loadProperties();
+        String serviceTmCfg = properties.getProperty("repo.tm." + guessServiceName());
+        if (!Utils.isEmpty(serviceTmCfg)) {
+            String[] segs = serviceTmCfg.split(",");
+            if (segs.length > 0) {
+                params.put("serviceName", segs[0]);
+            }
+            if (segs.length > 1) {
+                params.put("database", segs[1]);
+            }
+        }
+
+
         templateRender.render(params);
 
         try {

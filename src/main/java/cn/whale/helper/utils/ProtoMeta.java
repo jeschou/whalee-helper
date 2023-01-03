@@ -68,17 +68,7 @@ public class ProtoMeta {
     }
 
     private static void loadDefaultValueCfg() {
-        File f = new File(System.getProperty("user.home"), ".whalee-helper.properties");
-        if (!f.isFile()) {
-            return;
-        }
-        Properties properties = new Properties();
-        try {
-            properties.load(new FileInputStream(f));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
+        Properties properties = Utils.loadProperties();
 
         properties.forEach((k, v) -> {
             if (!(k instanceof String) || !(v instanceof String)) {

@@ -10,10 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -509,5 +506,19 @@ public class Utils {
             }
         }
         f.delete();
+    }
+
+    public static Properties loadProperties() {
+        Properties properties = new Properties();
+        File f = new File(System.getProperty("user.home"), ".whalee-helper.properties");
+        if (!f.isFile()) {
+            return properties;
+        }
+        try {
+            properties.load(new FileInputStream(f));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return properties;
     }
 }
