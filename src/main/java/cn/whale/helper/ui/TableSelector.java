@@ -23,6 +23,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +56,7 @@ public class TableSelector extends JPanel {
         repoNameInput = new JBTextField();
         add(repoNameInput, newCons(0, 1, 1, 1, 3, 3, 0, 1));
 
-        add(new JBLabel("Service name:"), newCons(1, 0, 1, 1, 0, 0, 8, 0));
+        add(new JBLabel("Db config:"), newCons(1, 0, 1, 1, 0, 0, 8, 0));
         serviceCombox = new ComboBox<>();
         new ComboboxSpeedSearch(serviceCombox);
         add(serviceCombox, newCons(1, 1, 1, 1, 3, 3, 0, 1));
@@ -98,6 +99,18 @@ public class TableSelector extends JPanel {
                 return;
             }
             dbConfig = (DbConfig) e.getItem();
+            if (dbConfig.serviceName.contains("add local config")) {
+                try {
+                    Desktop.getDesktop().browse(new URI("https://whales.feishu.cn/docx/P6tzdy6sNoyoEIxl4LSc7HEYn5b#SgQQdmiyWowa2Yx0BrncUW25nDs"));
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+                Window wind = SwingUtilities.getWindowAncestor(serviceCombox);
+                if (wind != null) {
+                    wind.dispose();
+                }
+                return;
+            }
             setLoading(databaseCombox);
             setLoading(tableCombox);
             resetFields();
@@ -165,6 +178,11 @@ public class TableSelector extends JPanel {
         new Thread(() -> {
             try {
                 final List<DbConfig> cfgs = NacosUtil.getDbConfigList();
+                cfgs.add(new DbConfig() {
+                    {
+                        this.serviceName = "➕add local config ...";
+                    }
+                });
                 final List<String> dbs = DB.getDatabases(cfgs.get(0));
 
                 SwingUtilities.invokeLater(() -> {

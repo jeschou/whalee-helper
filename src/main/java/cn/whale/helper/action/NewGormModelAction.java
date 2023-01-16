@@ -29,6 +29,9 @@ public class NewGormModelAction extends AnAction {
         if (!dialog.showAndGet()) {
             return;
         }
+        if (dialog.getDbConfig().port == 0) {
+            return;
+        }
 
         new GoRepoGenerator(project, virtualFile, dialog.getDbConfig(), dialog.getFileName(), dialog.getDatabase(), dialog.getTableName(), dialog.getStructName(), dialog.getColumnData()).generate();
 
