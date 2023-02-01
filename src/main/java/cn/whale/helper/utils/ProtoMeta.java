@@ -5,7 +5,6 @@ import com.squareup.wire.schema.Location;
 import com.squareup.wire.schema.internal.parser.*;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,16 +26,20 @@ public class ProtoMeta {
 
     public Map<String, ProtoFileElement> elementFileMaps = new HashMap<>();
 
+    public Map<String, String> locationPkgMap = new HashMap<>();
+
     public ProtoMeta(String base) {
         this.base = base;
     }
 
 
     public ProtoFileElement parse(String protoPath) {
+        loadDefaultValueCfg();
         try {
             Location loc = new Location(base, protoPath, 1, 1);
             String text = Utils.readText(new File(loc.getBase(), loc.getPath()));
             ProtoFileElement pf = ProtoParser.Companion.parse(loc, text);
+            locationPkgMap.put(protoPath, pf.getPackageName());
             // this is  different with parseDep
             pf.getTypes().forEach(e -> typeMaps.put(e.getName(), e));
             for (String imp : pf.getImports()) {
@@ -53,6 +56,7 @@ public class ProtoMeta {
             Location loc = new Location(base, protoPath, 1, 1);
             String text = Utils.readText(new File(loc.getBase(), loc.getPath()));
             ProtoFileElement pf = ProtoParser.Companion.parse(loc, text);
+            locationPkgMap.put(protoPath, pf.getPackageName());
             // this is  different with parse
             pf.getTypes().forEach(e -> {
                 String externalName = pf.getPackageName() + "." + e.getName();
@@ -85,7 +89,12 @@ public class ProtoMeta {
                 defaultValue.put(ks, Boolean.parseBoolean(vs));
             } else {
                 try {
-                    defaultValue.put(ks, Double.parseDouble(vs));
+                    double d = Double.parseDouble(vs);
+                    if (d == (long) d) {
+                        defaultValue.put(ks, (long) d);
+                    } else {
+                        defaultValue.put(ks, d);
+                    }
                 } catch (NumberFormatException e) {
                     defaultValue.put(ks, vs);
                 }
@@ -100,7 +109,6 @@ public class ProtoMeta {
      * @return
      */
     public Map<String, Object> toJsonMap(TypeElement typeElement) {
-        loadDefaultValueCfg();
         Map<String, Object> map = new HashMap<>();
         if (typeElement instanceof MessageElement) {
             for (FieldElement field : ((MessageElement) typeElement).getFields()) {
@@ -109,6 +117,13 @@ public class ProtoMeta {
                 if (fieldType == null) {
                     // find in declared types
                     fieldType = typeMaps.get(field.getType());
+                    if (fieldType == null && Character.isUpperCase(field.getType().charAt(0))) {
+                        String belongPkg = locationPkgMap.get(field.getLocation().getPath());
+                        if (belongPkg != null) {
+                            fieldType = typeMaps.get(belongPkg + "." + field.getType());
+                        }
+                    }
+
                 }
                 Object val = null;
                 if (fieldType != null) {
