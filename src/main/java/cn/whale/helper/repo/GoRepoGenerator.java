@@ -213,6 +213,9 @@ public class GoRepoGenerator {
             if (goType.contains("pq.")) {
                 sets.add("github.com/lib/pq");
             }
+            if (goType.contains("decimal.")) {
+                sets.add("github.com/shopspring/decimal");
+            }
             if (goType.contains("postgres.")) {
                 sets.add("github.com/jinzhu/gorm/dialects/postgres");
             }

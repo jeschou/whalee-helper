@@ -60,6 +60,9 @@ func Get${StructName}Repo() *${structName}Repo {
 	return ${structName}RepoInstance
 }
 
+// eager instantiation
+var _ = Get${StructName}Repo()
+
 func (r *${structName}Repo) Cast(val interface{}) *${StructName} {
 	if val == nil {
 		return nil

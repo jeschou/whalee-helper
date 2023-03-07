@@ -85,6 +85,8 @@ public class TableModel extends ReorderableTableModel {
         // for gorm v2: array type must declare type
         if (c.typeName.startsWith("_")) {
             sb.append(";type:").append(c.typeName.substring(1)).append("[]");
+        } else if (c.typeName.equalsIgnoreCase("numeric")) {
+            sb.append(";type:").append(c.typeName).append("(").append(c.size).append(",").append(c.precision).append(")");
         }
         sb.append("\" json:\"").append(c.name).append("\"`");
         return sb.toString();

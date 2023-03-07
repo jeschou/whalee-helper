@@ -24,6 +24,7 @@ public class DB {
         PG_GO_TYPE.put("bigserial", "int64");
         PG_GO_TYPE.put("float4", "float32");
         PG_GO_TYPE.put("float8", "float64");
+        PG_GO_TYPE.put("numeric", "decimal.Decimal");
         PG_GO_TYPE.put("bool", "bool");
         PG_GO_TYPE.put("_varchar", "pq.StringArray");
         PG_GO_TYPE.put("_int", "pq.Int32Array");
@@ -133,6 +134,8 @@ public class DB {
                 col.type = rs0.getInt("DATA_TYPE");
                 col.typeName = rs0.getString("TYPE_NAME");
                 col.comment = rs0.getString("REMARKS");
+                col.size = rs0.getInt("COLUMN_SIZE");
+                col.precision = rs0.getInt("DECIMAL_DIGITS");
                 list.add(col);
             });
             rs = conn.getMetaData().getPrimaryKeys(null, null, table);
@@ -169,6 +172,10 @@ public class DB {
         public String typeName;
         public boolean isPk;
         public String comment;
+
+        public  int size;
+        public  int precision;
+
 
         @Override
         public String toString() {

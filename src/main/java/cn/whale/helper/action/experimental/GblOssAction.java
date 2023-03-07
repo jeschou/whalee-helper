@@ -40,11 +40,11 @@ public class GblOssAction extends AnAction {
             return;
         }
 
-        VirtualFile moduleRoot = IDEUtils.getModuleRoot(virtualFile);
-        if (moduleRoot == null) {
-            presentation.setEnabledAndVisible(false);
-            return;
-        }
+//        VirtualFile moduleRoot = IDEUtils.getModuleRoot(virtualFile);
+//        if (moduleRoot == null) {
+//            presentation.setEnabledAndVisible(false);
+//            return;
+//        }
         presentation.setText("gbl_oss " + virtualFile.getParent().getName());
         presentation.setEnabledAndVisible(true);
     }
