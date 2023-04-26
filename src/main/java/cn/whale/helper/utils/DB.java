@@ -1,5 +1,7 @@
 package cn.whale.helper.utils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.sql.*;
 import java.util.*;
 
@@ -111,11 +113,14 @@ public class DB {
     }
 
 
-    public static List<String> getTables(DbConfig config, String database) {
-        final List<String> list = new ArrayList<>();
+    public static List<TableWithSchema> getTables(DbConfig config, String database) {
+        final List<TableWithSchema> list = new ArrayList<>();
         doWithSql((rs, cnames) -> {
-            list.add(rs.getString(1));
-        }, config, database, "select tablename from pg_tables where schemaname='public' \n" +
+            var tb = new TableWithSchema();
+            tb.tableName = rs.getString(1);
+            tb.schema = rs.getString(2);
+            list.add(tb);
+        }, config, database, "select tablename,schemaname from pg_tables where schemaname <> 'information_schema' and schemaname not like 'pg_%' \n" +
                 "and tablename  !~ '_copy\\d*$' \n" +
                 "and tablename  !~ '_partition$' \n" +
                 "and tablename  !~ '\\d{6,}$'\n" +
@@ -124,10 +129,10 @@ public class DB {
         return list;
     }
 
-    public static List<Column> getColumns(DbConfig config, String database, String table) {
+    public static List<Column> getColumns(DbConfig config, String database, TableWithSchema table) {
         final List<Column> list = new ArrayList<>();
         try (Connection conn = DB.getConnection(config, database)) {
-            ResultSet rs = conn.getMetaData().getColumns(null, "public", table, "%");
+            ResultSet rs = conn.getMetaData().getColumns(null, table.schema, table.tableName, "%");
             handleResultSet(rs, (rs0, cnames) -> {
                 Column col = new Column();
                 col.name = rs0.getString("COLUMN_NAME");
@@ -138,7 +143,7 @@ public class DB {
                 col.precision = rs0.getInt("DECIMAL_DIGITS");
                 list.add(col);
             });
-            rs = conn.getMetaData().getPrimaryKeys(null, null, table);
+            rs = conn.getMetaData().getPrimaryKeys(null, table.schema, table.tableName);
             handleResultSet(rs, (rs0, cnames) -> {
                 String pkc = rs0.getString("COLUMN_NAME");
                 list.stream().filter(c -> c.name.equals(pkc)).forEach(c -> c.isPk = true);
@@ -157,6 +162,22 @@ public class DB {
         void handleRow(ResultSet rs, List<String> colNames) throws Exception;
     }
 
+    public static class TableWithSchema implements Comparable<TableWithSchema> {
+        public String tableName = "";
+        public String schema = "";
+
+        @Override
+        public String toString() {
+            return tableName;
+        }
+
+        @Override
+        public int compareTo(@NotNull DB.TableWithSchema o) {
+            return this.tableName.compareTo(o.tableName);
+        }
+    }
+
+
     public static class Column {
         /**
          * column name
@@ -173,8 +194,8 @@ public class DB {
         public boolean isPk;
         public String comment;
 
-        public  int size;
-        public  int precision;
+        public int size;
+        public int precision;
 
 
         @Override

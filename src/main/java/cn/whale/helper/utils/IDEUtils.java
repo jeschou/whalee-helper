@@ -6,6 +6,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.jediterm.terminal.TerminalOutputStream;
@@ -179,6 +180,11 @@ public class IDEUtils {
             vf = dir.createChildDirectory(project, fileName);
         }
         return vf;
+    }
+
+    public static void refreshExternalChanges(VirtualFile dir) {
+        dir.refresh(true,true);
+        RefreshQueue.getInstance().refresh(true, true, null, dir);
     }
 
 }

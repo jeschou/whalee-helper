@@ -1,6 +1,7 @@
 package cn.whale.helper.action;
 
 import cn.whale.helper.ui.Notifier;
+import cn.whale.helper.utils.IDEUtils;
 import cn.whale.helper.utils.ProtoUtil;
 import cn.whale.helper.utils.Utils;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -11,7 +12,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -100,13 +100,13 @@ public class ProtocAction extends AnAction {
                 FileDocumentManager.getInstance().saveDocument(editor.getDocument());
             }
             compileProto(project, virtualFile);
-            RefreshQueue.getInstance().refresh(true, true, null, virtualFile.getParent());
+            IDEUtils.refreshExternalChanges(virtualFile.getParent());
         } else if (virtualFile.isDirectory()) {
             List<VirtualFile> list = getChildrenProtoFiles(virtualFile);
             for (VirtualFile vf : list) {
                 compileProto(project, vf);
             }
-            RefreshQueue.getInstance().refresh(true, true, null, virtualFile);
+            IDEUtils.refreshExternalChanges(virtualFile);
         }
 
     }

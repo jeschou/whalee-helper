@@ -1,5 +1,6 @@
 package cn.whale.helper.ui;
 
+import cn.whale.helper.utils.DB;
 import cn.whale.helper.utils.DbConfig;
 import cn.whale.helper.utils.Utils;
 import com.intellij.openapi.project.Project;
@@ -54,7 +55,8 @@ public class SelectTableDialogWrapper extends DialogWrapper {
     }
 
     public String getTableName() {
-        return (String) tableSelector.tableCombox.getSelectedItem();
+        var tb = (DB.TableWithSchema) tableSelector.tableCombox.getSelectedItem();
+        return tb.tableName;
     }
 
     public String getDatabase() {

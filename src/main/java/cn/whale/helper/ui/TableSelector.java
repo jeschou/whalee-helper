@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ComboboxSpeedSearch;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.ListCellRendererWithRightAlignedComponent;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTextField;
@@ -33,7 +34,7 @@ public class TableSelector extends JPanel {
     static Notifier notifier = Notifier.getInstance("whgo_helper gorm-repo-gen");
     public ComboBox<String> serviceCombox;
     public ComboBox<String> databaseCombox;
-    public ComboBox<String> tableCombox;
+    public ComboBox<DB.TableWithSchema> tableCombox;
     public JBTextField repoNameInput;
     public JBTable fieldsTable;
     public JBTextField structNameInput;
@@ -70,6 +71,17 @@ public class TableSelector extends JPanel {
         tableCombox = new ComboBox<>();
         new ComboboxSpeedSearch(tableCombox);
         add(tableCombox, newCons(3, 1, 1, 1, 3, 3, 0, 1));
+        tableCombox.setRenderer(new ListCellRendererWithRightAlignedComponent<DB.TableWithSchema>() {
+            @Override
+            protected void customize(DB.TableWithSchema s) {
+                if (s == null) {
+                    return;
+                }
+                setLeftText(s.tableName);
+                setRightText(s.schema);
+                setRightForeground(Color.lightGray);
+            }
+        });
 
         add(new JBLabel("Struct name:"), newCons(4, 0, 1, 1, 0, 0, 8, 0));
         structNameInput = new JBTextField();
@@ -136,13 +148,13 @@ public class TableSelector extends JPanel {
             final String db = e.getItem().toString();
 
             resetFields();
-            setLoading(tableCombox);
+            setLoading(tableCombox, new DB.TableWithSchema());
             new Thread(() -> {
                 try {
-                    final List<String> tbls = Utils.isNotEmpty(db) ? DB.getTables(dbConfig, db) : new ArrayList<>();
+                    final List<DB.TableWithSchema> tbls = Utils.isNotEmpty(db) ? DB.getTables(dbConfig, db) : new ArrayList<>();
                     SwingUtilities.invokeLater(() -> {
-                        List<String> tbls0 = removeBackUpTable(tbls);
-                        tbls0.add(0, "");
+                        List<DB.TableWithSchema> tbls0 = removeBackUpTable(tbls);
+                        tbls0.add(0, new DB.TableWithSchema());
                         tableCombox.setModel(new DefaultComboBoxModel(tbls0.toArray()));
                         tableCombox.setSelectedIndex(0);
                     });
@@ -160,11 +172,11 @@ public class TableSelector extends JPanel {
             }
             dbConfig = (DbConfig) serviceCombox.getSelectedItem();
             String database = (String) databaseCombox.getSelectedItem();
-            String table = (String) e.getItem();
+            DB.TableWithSchema table = (DB.TableWithSchema) e.getItem();
             List<DB.Column> list = new ArrayList<>();
-            if (Utils.isNoneEmpty(database, table)) {
+            if (Utils.isNoneEmpty(database, table.tableName)) {
                 repoNameInput.setText(table + "-repo");
-                structNameInput.setText(Utils.toTitleCamelCase(table));
+                structNameInput.setText(Utils.toTitleCamelCase(table.tableName));
                 list = DB.getColumns(dbConfig, database, table);
             } else {
                 repoNameInput.setText("");
@@ -198,8 +210,12 @@ public class TableSelector extends JPanel {
         }).start();
     }
 
-    private void setLoading(ComboBox<String> combox) {
-        combox.setModel(new DefaultComboBoxModel(new String[]{"loading..."}));
+    private <T> void setLoading(ComboBox<T> combox, T... values) {
+        T[] vals = values;
+        if (vals.length == 0) {
+            vals = (T[]) new String[]{"loading..."};
+        }
+        combox.setModel(new DefaultComboBoxModel(vals));
         combox.setSelectedIndex(0);
     }
 
@@ -215,10 +231,10 @@ public class TableSelector extends JPanel {
      * @param list
      * @return
      */
-    private List<String> removeBackUpTable(List<String> list) {
-        List<String> list2 = new ArrayList<>(list.size());
-        for (String s : list) {
-            if (!s.matches(".+\\d+(_partition)?")) {
+    private List<DB.TableWithSchema> removeBackUpTable(List<DB.TableWithSchema> list) {
+        List<DB.TableWithSchema> list2 = new ArrayList<>(list.size());
+        for (DB.TableWithSchema s : list) {
+            if (!s.tableName.matches(".+\\d+(_partition)?")) {
                 list2.add(s);
             }
         }
