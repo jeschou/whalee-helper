@@ -14,7 +14,10 @@ public class TableModel extends ReorderableTableModel {
 
     Vector columnVector;
 
-    public TableModel() {
+    int gormVersion = 1;
+
+    public TableModel(int gormVersion) {
+        this.gormVersion = gormVersion;
         tableColumns = new ColumnConfig[]{
                 new ColumnConfig("", "checked", 35, Boolean.class, true),
                 new ColumnConfig("Name", "name", 175, String.class, false),
@@ -57,7 +60,7 @@ public class TableModel extends ReorderableTableModel {
             Utils.copyByField(rd, c);
             rd.checked = true;
             rd.fieldName = Utils.toTitleCamelCase(c.name);
-            rd.goType = DB.pgToGoType(c.typeName);
+            rd.goType = gormVersion == 1 ? DB.pgToGoType(c.typeName) : DB.pgToGoTypeV2(c.typeName);
             rd.tag = createTag(c);
             rowDataList.add(rd);
             Vector vectorRow = new Vector();
@@ -74,7 +77,11 @@ public class TableModel extends ReorderableTableModel {
         StringBuilder sb = new StringBuilder();
         sb.append("`gorm:\"column:").append(c.name);
         if (c.isPk) {
-            sb.append(";primary_key");
+            if (gormVersion == 2) {
+                sb.append(";primaryKey");
+            } else {
+                sb.append(";primary_key");
+            }
         }
         if ("created_time".equals(c.name) || "create_time".equals(c.name)) {
             sb.append(";autoCreateTime");

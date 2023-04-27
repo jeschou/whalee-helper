@@ -16,12 +16,12 @@ public class SelectTableDialogWrapper extends DialogWrapper {
 
     TableSelector tableSelector;
 
-    public SelectTableDialogWrapper(Project project) {
+    public SelectTableDialogWrapper(Project project, int gormVersion) {
         super(true); // use current window as parent
         this.project = project;
-        tableSelector = new TableSelector(project);
+        tableSelector = new TableSelector(project, gormVersion);
         init();
-        setTitle("Create Dao From Table");
+        setTitle(String.format("Create Repo v%d From Table", gormVersion));
     }
 
     @Override

@@ -42,8 +42,11 @@ public class TableSelector extends JPanel {
 
     private Project project;
 
-    public TableSelector(Project project) {
+    int gormVersion = 1;
+
+    public TableSelector(Project project, int gormVersion) {
         this.project = project;
+        this.gormVersion = gormVersion;
         createUIComponents();
     }
 
@@ -175,7 +178,11 @@ public class TableSelector extends JPanel {
             DB.TableWithSchema table = (DB.TableWithSchema) e.getItem();
             List<DB.Column> list = new ArrayList<>();
             if (Utils.isNoneEmpty(database, table.tableName)) {
-                repoNameInput.setText(table + "-repo");
+                if (gormVersion == 2) {
+                    repoNameInput.setText(table + "-repo2");
+                } else {
+                    repoNameInput.setText(table + "-repo");
+                }
                 structNameInput.setText(Utils.toTitleCamelCase(table.tableName));
                 list = DB.getColumns(dbConfig, database, table);
             } else {
@@ -242,7 +249,7 @@ public class TableSelector extends JPanel {
     }
 
     private void updateFieldsTable(List<DB.Column> columns) {
-        TableModel tableModel = new TableModel();
+        TableModel tableModel = new TableModel(gormVersion);
         tableModel.setDbColumns(columns);
 
         fieldsTable.setModel(tableModel);

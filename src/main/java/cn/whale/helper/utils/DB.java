@@ -7,6 +7,7 @@ import java.util.*;
 
 public class DB {
     static Map<String, String> PG_GO_TYPE = new HashMap<>();
+    static Map<String, String> PG_GO_TYPE_V2 = new HashMap<>();
 
     static {
         try {
@@ -40,6 +41,33 @@ public class DB {
         PG_GO_TYPE.put("date", "*time.Time");
         PG_GO_TYPE.put("timestamp", "*time.Time");
         PG_GO_TYPE.put("timestamptz", "*time.Time");
+    }
+
+
+    static {
+        PG_GO_TYPE_V2.put("varchar", "string");
+        PG_GO_TYPE_V2.put("int", "int32");
+        PG_GO_TYPE_V2.put("int2", "int32");
+        PG_GO_TYPE_V2.put("int4", "int32");
+        PG_GO_TYPE_V2.put("int8", "int64");
+        PG_GO_TYPE_V2.put("serial", "int64");
+        PG_GO_TYPE_V2.put("bigserial", "int64");
+        PG_GO_TYPE_V2.put("float4", "float32");
+        PG_GO_TYPE_V2.put("float8", "float64");
+        PG_GO_TYPE_V2.put("numeric", "decimal.Decimal");
+        PG_GO_TYPE_V2.put("bool", "bool");
+        PG_GO_TYPE_V2.put("_varchar", "pq.StringArray");
+        PG_GO_TYPE_V2.put("_int", "pq.Int32Array");
+        PG_GO_TYPE_V2.put("_int2", "pq.Int32Array");
+        PG_GO_TYPE_V2.put("_int4", "pq.Int32Array");
+        PG_GO_TYPE_V2.put("_int8", "pq.Int64Array");
+        PG_GO_TYPE_V2.put("_float4", "pq.Float32Array");
+        PG_GO_TYPE_V2.put("_float8", "pq.Float64Array");
+        PG_GO_TYPE_V2.put("jsonb", "datatypes.JSON");
+        PG_GO_TYPE_V2.put("json", "string");
+        PG_GO_TYPE_V2.put("date", "*time.Time");
+        PG_GO_TYPE_V2.put("timestamp", "*time.Time");
+        PG_GO_TYPE_V2.put("timestamptz", "*time.Time");
     }
 
     public static Connection getConnection(DbConfig config, String database) {
@@ -156,6 +184,15 @@ public class DB {
 
     public static String pgToGoType(String pGtype) {
         return PG_GO_TYPE.getOrDefault(pGtype, "string");
+    }
+
+    /**
+     * for gorm v2
+     * @param pGtype
+     * @return
+     */
+    public static String pgToGoTypeV2(String pGtype) {
+        return PG_GO_TYPE_V2.getOrDefault(pGtype, "string");
     }
 
     interface ResultSetHandler {

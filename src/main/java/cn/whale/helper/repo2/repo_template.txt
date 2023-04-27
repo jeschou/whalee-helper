@@ -1,0 +1,64 @@
+package ${package}
+
+import ($!{imports})
+
+type ${StructName} struct {
+${structFields}
+}
+
+func (do *${StructName}) TableName() string {
+	return "${tableName}"
+}
+
+#if $!{IsDelete}
+// implements hint
+var _ repo2.SoftDeleteHook = (*${StructName})(nil)
+
+// repo.SoftDeleteHook
+func (do *${StructName}) BeforeSoftDelete(ctx context.Context) error {
+	do.$!{IsDelete} = 1
+	do.$!{UpdateTime} = time.Now().Unix()
+	return nil
+}
+
+// repo.SoftDeleteHook
+func (do *${StructName}) AfterSoftDelete(ctx context.Context) error {
+	return nil
+}
+
+#fi
+type ${structName}RepoFields struct {
+${repoFieldStructFields}
+}
+
+type ${structName}Repo[T *${StructName},] struct {
+	repo2.RepositoryInterface[*${StructName}]
+	*${structName}RepoFields
+}
+
+var (
+	${structName}RepoInstance *${structName}Repo[*${StructName}]
+	${structName}RepoOnce     sync.Once
+)
+
+func Get${StructName}Repo() *${structName}Repo[*${StructName}] {
+	${structName}RepoOnce.Do(func() {
+		repoImpl := repo2.NewRepository[*${StructName}](new(${StructName}))
+		repoImpl.Tm = repo2.NewTransactionManager("${serviceName}", "${database}")
+		repoFields := new(${structName}RepoFields)
+		repoImpl.InitRepoFields(repoFields)
+#if $!{IsDelete}
+		repoImpl.MandatoryCondition = repoFields.$!{IsDelete}.Eq(0)
+#fi
+		${structName}RepoInstance = &${structName}Repo[*${StructName}]{
+			RepositoryInterface:       repoImpl,
+			${structName}RepoFields:   repoFields,
+		}
+		// auto create table, column, index if absence
+		repoImpl.AutoMigrate()
+	})
+	return ${structName}RepoInstance
+}
+
+// eager instantiation
+var _ = Get${StructName}Repo()

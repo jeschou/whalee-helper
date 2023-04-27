@@ -1,6 +1,6 @@
 package cn.whale.helper.action;
 
-import cn.whale.helper.repo.GoRepoGenerator;
+import cn.whale.helper.repo2.GoRepo2Generator;
 import cn.whale.helper.ui.SelectTableDialogWrapper;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -9,7 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
-public class NewGormModelAction extends AnAction {
+public class NewGormModel2Action extends AnAction {
 
     @Override
     public void update(@NotNull AnActionEvent e) {
@@ -25,7 +25,7 @@ public class NewGormModelAction extends AnAction {
         if (virtualFile == null || project == null) {
             return;
         }
-        SelectTableDialogWrapper dialog = new SelectTableDialogWrapper(project, 1);
+        SelectTableDialogWrapper dialog = new SelectTableDialogWrapper(project,2);
         if (!dialog.showAndGet()) {
             return;
         }
@@ -33,7 +33,7 @@ public class NewGormModelAction extends AnAction {
             return;
         }
 
-        new GoRepoGenerator(project, virtualFile, dialog.getDbConfig(), dialog.getFileName(), dialog.getDatabase(), dialog.getTableName(), dialog.getStructName(), dialog.getColumnData()).generate();
+        new GoRepo2Generator(project, virtualFile, dialog.getDbConfig(), dialog.getFileName(), dialog.getDatabase(), dialog.getTableName(), dialog.getStructName(), dialog.getColumnData()).generate();
 
     }
 }

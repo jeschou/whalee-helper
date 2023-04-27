@@ -38,7 +38,11 @@
                 description="Create new micro service">
             <add-to-group group-id="NewGroup" anchor="last"/>
         </action>
-
+        <action id="NewGormModel2Action" class="cn.whale.helper.action.NewGormModel2Action" text="New Gorm Repo V2"
+                icon="PluginIcons.REPO"
+                description="Create gorm repo v2 from database table">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
         <action id="NewGormModelAction" class="cn.whale.helper.action.NewGormModelAction" text="New Gorm Repo"
                 icon="PluginIcons.REPO"
                 description="Create gorm repo from database table">
