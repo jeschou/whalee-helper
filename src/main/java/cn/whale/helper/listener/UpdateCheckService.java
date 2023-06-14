@@ -16,6 +16,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.util.NlsActions;
+import com.intellij.util.text.SemVer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,7 +68,12 @@ public class UpdateCheckService implements AppLifecycleListener {
             InputStream is = new URL(releaseBase + "latest.txt").openStream();
             ch.add(is);
             String text = Utils.readText(is).trim();
-            if (text.equals(plugin.getVersion())) {
+            @Nullable SemVer newVersion = SemVer.parseFromText(text);
+            @Nullable SemVer curVersion = SemVer.parseFromText(plugin.getVersion());
+            if (newVersion == null) {
+                return;
+            }
+            if (curVersion != null && newVersion.compareTo(curVersion) <= 0) {
                 return;
             }
             showPopup(text, plugin.getVersion());

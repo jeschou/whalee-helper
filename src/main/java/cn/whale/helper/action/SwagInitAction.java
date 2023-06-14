@@ -9,11 +9,14 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class SwagInitAction extends AnAction {
 
     static Notifier notifier = Notifier.getInstance("whgo_helper swag");
+
+    static String[] activeSuffix = new String[]{"api-server", "-bff", "-agi"};
 
     static String relative_parent = "../";
 
@@ -31,7 +34,7 @@ public class SwagInitAction extends AnAction {
         Presentation presentation = e.getPresentation();
 
         VirtualFile moduleRoot = IDEUtils.getModuleRoot(virtualFile);
-        if (moduleRoot == null || !(moduleRoot.getName().endsWith("api-server") || moduleRoot.getName().endsWith("-bff"))) {
+        if (moduleRoot == null || !StringUtils.endsWithAny(moduleRoot.getName(), activeSuffix)) {
             presentation.setEnabledAndVisible(false);
             return;
         }
