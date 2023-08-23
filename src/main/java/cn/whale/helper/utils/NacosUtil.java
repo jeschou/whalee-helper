@@ -3,6 +3,7 @@ package cn.whale.helper.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.InputStream;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class NacosUtil {
 
     private static InputStream connect(String url0) throws Exception {
         URL url = new URL(url0);
-        URLConnection uc = url.openConnection();
+        URLConnection uc = url.openConnection(Proxy.NO_PROXY);
         uc.setConnectTimeout(5 * 1000);
         uc.setReadTimeout(5 * 1000);
         uc.connect();

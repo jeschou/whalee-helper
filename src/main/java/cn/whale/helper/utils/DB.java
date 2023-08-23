@@ -74,6 +74,8 @@ public class DB {
     public static Connection getConnection(DbConfig config, String database) {
         try {
             DriverManager.setLoginTimeout(5);
+            System.setProperty("http.nonProxyHosts","*");
+            System.setProperty("socksNonProxyHosts","*");
             return DriverManager.getConnection(String.format("jdbc:postgresql://%s:%d/%s", config.host, config.port, database), config.user, config.password);
         } catch (SQLException throwables) {
             throw new RuntimeException(throwables);
