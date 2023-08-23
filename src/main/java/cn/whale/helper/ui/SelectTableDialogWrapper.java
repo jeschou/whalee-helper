@@ -1,5 +1,6 @@
 package cn.whale.helper.ui;
 
+import cn.whale.helper.action.RepoGenCtx;
 import cn.whale.helper.utils.DB;
 import cn.whale.helper.utils.DbConfig;
 import cn.whale.helper.utils.Utils;
@@ -16,12 +17,12 @@ public class SelectTableDialogWrapper extends DialogWrapper {
 
     TableSelector tableSelector;
 
-    public SelectTableDialogWrapper(Project project, int gormVersion) {
+    public SelectTableDialogWrapper(Project project, RepoGenCtx ctx) {
         super(true); // use current window as parent
         this.project = project;
-        tableSelector = new TableSelector(project, gormVersion);
+        tableSelector = new TableSelector(project, ctx);
         init();
-        setTitle(String.format("Create Repo v%d From Table", gormVersion));
+        setTitle(String.format("Create Repo v%d From Table", ctx.gormVersion));
     }
 
     @Override
@@ -56,6 +57,9 @@ public class SelectTableDialogWrapper extends DialogWrapper {
 
     public String getTableName() {
         var tb = (DB.TableWithSchema) tableSelector.tableCombox.getSelectedItem();
+        if (!"public".equals(tb.schema)) {
+            return tb.schema + "." + tb.tableName;
+        }
         return tb.tableName;
     }
 

@@ -25,7 +25,10 @@ public class NewGormModel2Action extends AnAction {
         if (virtualFile == null || project == null) {
             return;
         }
-        SelectTableDialogWrapper dialog = new SelectTableDialogWrapper(project,2);
+        RepoGenCtx ctx = new RepoGenCtx(virtualFile);
+        ctx.gormVersion = 2;
+
+        SelectTableDialogWrapper dialog = new SelectTableDialogWrapper(project, ctx);
         if (!dialog.showAndGet()) {
             return;
         }

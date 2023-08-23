@@ -1,5 +1,6 @@
 package cn.whale.helper.ui;
 
+import cn.whale.helper.action.RepoGenCtx;
 import cn.whale.helper.ui.table.ReorderableTableModel;
 import cn.whale.helper.utils.DB;
 import cn.whale.helper.utils.Utils;
@@ -14,10 +15,11 @@ public class TableModel extends ReorderableTableModel {
 
     Vector columnVector;
 
-    int gormVersion = 1;
+    RepoGenCtx ctx;
+    private List<DB.Index> indexList;
 
-    public TableModel(int gormVersion) {
-        this.gormVersion = gormVersion;
+    public TableModel(RepoGenCtx ctx) {
+        this.ctx = ctx;
         tableColumns = new ColumnConfig[]{
                 new ColumnConfig("", "checked", 35, Boolean.class, true),
                 new ColumnConfig("Name", "name", 175, String.class, false),
@@ -60,7 +62,7 @@ public class TableModel extends ReorderableTableModel {
             Utils.copyByField(rd, c);
             rd.checked = true;
             rd.fieldName = Utils.toTitleCamelCase(c.name);
-            rd.goType = gormVersion == 1 ? DB.pgToGoType(c.typeName) : DB.pgToGoTypeV2(c.typeName);
+            rd.goType = ctx.isGormV2() ? DB.pgToGoTypeV2(c.typeName) : DB.pgToGoType(c.typeName);
             rd.tag = createTag(c);
             rowDataList.add(rd);
             Vector vectorRow = new Vector();
@@ -77,7 +79,7 @@ public class TableModel extends ReorderableTableModel {
         StringBuilder sb = new StringBuilder();
         sb.append("`gorm:\"column:").append(c.name);
         if (c.isPk) {
-            if (gormVersion == 2) {
+            if (ctx.isGormV2()) {
                 sb.append(";primaryKey");
             } else {
                 sb.append(";primary_key");
@@ -95,7 +97,23 @@ public class TableModel extends ReorderableTableModel {
         } else if (c.typeName.equalsIgnoreCase("numeric")) {
             sb.append(";type:").append(c.typeName).append("(").append(c.size).append(",").append(c.precision).append(")");
         }
-        sb.append("\" json:\"").append(c.name).append("\"`");
+        for (DB.Index idx : indexList) {
+            int idxIdx = idx.columns.indexOf(c.name);
+            if (idxIdx >= 0) {
+                sb.append(";").append(idx.isUnique ? (ctx.isGormV2() ? "uniqueIndex" : "unique_index") : "index").append(":");
+                sb.append(idx.name);
+                if (!"btree".equalsIgnoreCase(idx.indexType)) {
+                    sb.append(",type:").append(idx.indexType);
+                }
+                if (idx.columns.size() > 1) {
+                    sb.append(",priority:").append(idxIdx + 1);
+                }
+            }
+        }
+
+        sb.append('"');// end of gorm tag
+
+        sb.append(" json:\"").append(c.name).append("\"`");
         return sb.toString();
     }
 
@@ -103,6 +121,10 @@ public class TableModel extends ReorderableTableModel {
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return tableColumns[columnIndex].type;
+    }
+
+    public void setIndex(List<DB.Index> indexList) {
+        this.indexList = indexList;
     }
 }
 

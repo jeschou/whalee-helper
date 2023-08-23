@@ -1,5 +1,6 @@
 package cn.whale.helper.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
@@ -72,6 +73,7 @@ public class DB {
 
     public static Connection getConnection(DbConfig config, String database) {
         try {
+            DriverManager.setLoginTimeout(5);
             return DriverManager.getConnection(String.format("jdbc:postgresql://%s:%d/%s", config.host, config.port, database), config.user, config.password);
         } catch (SQLException throwables) {
             throw new RuntimeException(throwables);
@@ -182,12 +184,62 @@ public class DB {
         return list;
     }
 
+    /**
+     * get index list, without primary key index
+     *
+     * @param config
+     * @param database
+     * @param table
+     * @return
+     */
+    public static List<Index> getIndexes(DbConfig config, String database, TableWithSchema table) {
+        final List<Index> list = new ArrayList<>();
+        doWithSql((rs, colNames) -> {
+            Index idx = new Index();
+            idx.name = rs.getString(2);
+            idx.columns = List.of(rs.getString(3).split(","));
+            idx.isUnique = rs.getBoolean(4);
+            idx.indexType = rs.getString(5);
+            list.add(idx);
+        }, config, database, "select\n" +
+                "    t.relname as table_name,\n" +
+                "    i.relname as index_name,\n" +
+                "    array_to_string(array_agg(a.attname), ',') as column_names,\n" +
+                "    ix.indisunique,\n" +
+                "    max(am.amname) as index_type\n" +
+                "from\n" +
+                "    pg_class t,\n" +
+                "    pg_class i,\n" +
+                "    pg_index ix,\n" +
+                "    pg_attribute a,\n" +
+                "    pg_am am\n" +
+                "where\n" +
+                "    t.oid = ix.indrelid\n" +
+                "    and i.oid = ix.indexrelid\n" +
+                "    and a.attrelid = t.oid\n" +
+                "    and a.attnum = ANY(ix.indkey)\n" +
+                "    and am.oid=i.relam\n" +
+                "    and t.relkind = 'r'\n" +
+                "    and t.relname =?\n" +
+                "    and ix.indisprimary=false\n" +
+                "group by\n" +
+                "    t.relname,\n" +
+                "    i.relname,\n" +
+                "    ix.indisunique\n" +
+                "order by\n" +
+                "    t.relname,\n" +
+                "    i.relname;", table.tableName);
+
+        return list;
+    }
+
     public static String pgToGoType(String pGtype) {
         return PG_GO_TYPE.getOrDefault(pGtype, "string");
     }
 
     /**
      * for gorm v2
+     *
      * @param pGtype
      * @return
      */
@@ -244,6 +296,29 @@ public class DB {
                     ", isPk=" + isPk +
                     ", comment='" + comment + '\'' +
                     '}';
+        }
+    }
+
+    public static class Index {
+        public String name;
+        public boolean isUnique;
+
+        public String indexType;
+        public List<String> columns;
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(name).append("(");
+            sb.append(StringUtils.join(columns, ", "));
+            sb.append(")");
+            if (isUnique){
+                sb.append(" unique");
+            }
+            if("btree".equalsIgnoreCase(indexType)) {
+                sb.append(" ").append(indexType);
+            }
+            return sb.toString();
         }
     }
 
