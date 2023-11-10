@@ -97,16 +97,19 @@ public class TableModel extends ReorderableTableModel {
         } else if (c.typeName.equalsIgnoreCase("numeric")) {
             sb.append(";type:").append(c.typeName).append("(").append(c.size).append(",").append(c.precision).append(")");
         }
-        for (DB.Index idx : indexList) {
-            int idxIdx = idx.columns.indexOf(c.name);
-            if (idxIdx >= 0) {
-                sb.append(";").append(idx.isUnique ? (ctx.isGormV2() ? "uniqueIndex" : "unique_index") : "index").append(":");
-                sb.append(idx.name);
-                if (!"btree".equalsIgnoreCase(idx.indexType)) {
-                    sb.append(",type:").append(idx.indexType);
-                }
-                if (idx.columns.size() > 1) {
-                    sb.append(",priority:").append(idxIdx + 1);
+        if (ctx.isGormV2()) {
+            // only create index tag for gorm v2 (v1 can not guarantee index field order)
+            for (DB.Index idx : indexList) {
+                int idxIdx = idx.columns.indexOf(c.name);
+                if (idxIdx >= 0) {
+                    sb.append(";").append(idx.isUnique ? (ctx.isGormV2() ? "uniqueIndex" : "unique_index") : "index").append(":");
+                    sb.append(idx.name);
+                    if (!"btree".equalsIgnoreCase(idx.indexType)) {
+                        sb.append(",type:").append(idx.indexType);
+                    }
+                    if (idx.columns.size() > 1) {
+                        sb.append(",priority:").append(idxIdx + 1);
+                    }
                 }
             }
         }

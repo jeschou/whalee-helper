@@ -74,8 +74,8 @@ public class DB {
     public static Connection getConnection(DbConfig config, String database) {
         try {
             DriverManager.setLoginTimeout(5);
-            System.setProperty("http.nonProxyHosts","*");
-            System.setProperty("socksNonProxyHosts","*");
+            System.setProperty("http.nonProxyHosts", "*");
+            System.setProperty("socksNonProxyHosts", "*");
             return DriverManager.getConnection(String.format("jdbc:postgresql://%s:%d/%s", config.host, config.port, database), config.user, config.password);
         } catch (SQLException throwables) {
             throw new RuntimeException(throwables);
@@ -198,39 +198,22 @@ public class DB {
         final List<Index> list = new ArrayList<>();
         doWithSql((rs, colNames) -> {
             Index idx = new Index();
-            idx.name = rs.getString(2);
-            idx.columns = List.of(rs.getString(3).split(","));
-            idx.isUnique = rs.getBoolean(4);
-            idx.indexType = rs.getString(5);
+            idx.name = rs.getString(1);
+
+            String def = rs.getString(2);
+            String cols = StringUtils.substringBetween(def, "(", ")");
+            cols = StringUtils.replace(cols, " ", "");
+            cols = StringUtils.replace(cols, "\"", "");
+            cols = StringUtils.replace(cols, "'", "");
+            if (StringUtils.endsWith(idx.name, "_pkey") && "id".equals(cols)) {
+                // ignore pk
+                return;
+            }
+            idx.columns = List.of(cols.split(","));
+            idx.isUnique = StringUtils.contains(def, " UNIQUE INDEX ");
+            idx.indexType = StringUtils.contains(def, "btree") ? "btree" : "";
             list.add(idx);
-        }, config, database, "select\n" +
-                "    t.relname as table_name,\n" +
-                "    i.relname as index_name,\n" +
-                "    array_to_string(array_agg(a.attname), ',') as column_names,\n" +
-                "    ix.indisunique,\n" +
-                "    max(am.amname) as index_type\n" +
-                "from\n" +
-                "    pg_class t,\n" +
-                "    pg_class i,\n" +
-                "    pg_index ix,\n" +
-                "    pg_attribute a,\n" +
-                "    pg_am am\n" +
-                "where\n" +
-                "    t.oid = ix.indrelid\n" +
-                "    and i.oid = ix.indexrelid\n" +
-                "    and a.attrelid = t.oid\n" +
-                "    and a.attnum = ANY(ix.indkey)\n" +
-                "    and am.oid=i.relam\n" +
-                "    and t.relkind = 'r'\n" +
-                "    and t.relname =?\n" +
-                "    and ix.indisprimary=false\n" +
-                "group by\n" +
-                "    t.relname,\n" +
-                "    i.relname,\n" +
-                "    ix.indisunique\n" +
-                "order by\n" +
-                "    t.relname,\n" +
-                "    i.relname;", table.tableName);
+        }, config, database, "select indexname,indexdef from pg_indexes where tablename=?", table.tableName);
 
         return list;
     }
@@ -314,10 +297,10 @@ public class DB {
             sb.append(name).append("(");
             sb.append(StringUtils.join(columns, ", "));
             sb.append(")");
-            if (isUnique){
+            if (isUnique) {
                 sb.append(" unique");
             }
-            if("btree".equalsIgnoreCase(indexType)) {
+            if ("btree".equalsIgnoreCase(indexType)) {
                 sb.append(" ").append(indexType);
             }
             return sb.toString();
