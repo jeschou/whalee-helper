@@ -31,6 +31,7 @@ public class DB {
         PG_GO_TYPE.put("numeric", "decimal.Decimal");
         PG_GO_TYPE.put("bool", "bool");
         PG_GO_TYPE.put("_varchar", "pq.StringArray");
+        PG_GO_TYPE.put("_text", "pq.StringArray");
         PG_GO_TYPE.put("_int", "pq.Int32Array");
         PG_GO_TYPE.put("_int2", "pq.Int32Array");
         PG_GO_TYPE.put("_int4", "pq.Int32Array");
@@ -58,6 +59,7 @@ public class DB {
         PG_GO_TYPE_V2.put("numeric", "decimal.Decimal");
         PG_GO_TYPE_V2.put("bool", "bool");
         PG_GO_TYPE_V2.put("_varchar", "pq.StringArray");
+        PG_GO_TYPE_V2.put("_text", "pq.StringArray");
         PG_GO_TYPE_V2.put("_int", "pq.Int32Array");
         PG_GO_TYPE_V2.put("_int2", "pq.Int32Array");
         PG_GO_TYPE_V2.put("_int4", "pq.Int32Array");

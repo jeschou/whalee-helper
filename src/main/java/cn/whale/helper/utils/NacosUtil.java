@@ -31,7 +31,7 @@ public class NacosUtil {
         DbConfig test = Utils.mapper.readValue(is, DbConfig.class);
         test.serviceName = "test";
         list.add(test);
-        Properties properties = Utils.loadProperties();
+        Properties properties = ConfigUtil.loadProperties();
         properties.forEach((k, v) -> {
             if (!(k instanceof String) || !(v instanceof String)) {
                 return;

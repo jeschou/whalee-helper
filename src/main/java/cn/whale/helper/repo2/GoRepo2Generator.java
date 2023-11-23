@@ -3,10 +3,7 @@ package cn.whale.helper.repo2;
 import cn.whale.helper.template.SimpleTemplateRender;
 import cn.whale.helper.ui.Notifier;
 import cn.whale.helper.ui.TableRowData;
-import cn.whale.helper.utils.DbConfig;
-import cn.whale.helper.utils.GoUtils;
-import cn.whale.helper.utils.IDEUtils;
-import cn.whale.helper.utils.Utils;
+import cn.whale.helper.utils.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.apache.commons.lang.StringUtils;
@@ -138,7 +135,7 @@ public class GoRepo2Generator {
         params.put("imports", impsSb.toString());
         params.put("serviceName", guessServiceName());
 
-        Properties properties = Utils.loadProperties();
+        Properties properties = ConfigUtil.loadProperties();
         String serviceTmCfg = properties.getProperty("repo.tm." + guessServiceName());
         if (!Utils.isEmpty(serviceTmCfg)) {
             String[] segs = serviceTmCfg.split(",");

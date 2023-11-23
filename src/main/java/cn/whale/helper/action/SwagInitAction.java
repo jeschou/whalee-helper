@@ -55,6 +55,8 @@ public class SwagInitAction extends AnAction {
         String cmd = "swag init";
         if (virtualFile.getPath().contains("whale-bapi-server")) {
             cmd = "swag init --exclude=./controllers/jingyingbao --output=./docs";
+        } else if (virtualFile.getPath().contains("whale-agi")) {
+            cmd = "swag init --pd";
         }
         VirtualFile moduleRoot = IDEUtils.getModuleRoot(virtualFile);
         if (moduleRoot == null) {

@@ -86,6 +86,11 @@
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <add-to-group group-id="GenerateGroup" anchor="last"/>
         </action>
+        <action id="test_gin" class="cn.whale.helper.action.TestGinAction" text="test gin"
+                icon="PluginIcons.SWAG"
+                description="test grpc">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
         <action id="gen_grpc_handler" class="cn.whale.helper.action.GenGrpcHandlerAction" text="generate grpc handler"
                 icon="PluginIcons.PROTOBUF"
                 description="generate grpc handler">

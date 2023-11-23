@@ -14,6 +14,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.squareup.wire.schema.internal.parser.ProtoFileElement;
 import com.squareup.wire.schema.internal.parser.RpcElement;
 import com.squareup.wire.schema.internal.parser.ServiceElement;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -120,7 +121,7 @@ public class TestGrpcAction extends AnAction {
         String reqType = rpcSchema.rpcElement.getRequestType();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("###\n");
+        sb.append("### ").append(StringUtils.defaultString(rpcSchema.rpcElement.getDocumentation())).append("\n");
         sb.append("GRPC 127.0.0.1:50051/").append(fullName).append("\n");
         sb.append("lang: zh-CN\n"); // 暗示用户, 可以通过 header 指定 语言环境
         sb.append("\n");

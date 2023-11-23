@@ -508,17 +508,4 @@ public class Utils {
         f.delete();
     }
 
-    public static Properties loadProperties() {
-        Properties properties = new Properties();
-        File f = new File(System.getProperty("user.home"), ".whalee-helper.properties");
-        if (!f.isFile()) {
-            return properties;
-        }
-        try {
-            properties.load(new FileInputStream(f));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return properties;
-    }
 }
