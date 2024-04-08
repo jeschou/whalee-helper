@@ -8,9 +8,15 @@ import com.intellij.openapi.project.Project;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.net.Proxy;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -20,6 +26,27 @@ public class Utils {
     static {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
+    }
+
+    public static URLConnection connectURLNoProxy(String url0) throws IOException {
+        URL url = new URL(url0);
+        URLConnection uc = url.openConnection(Proxy.NO_PROXY);
+        uc.setConnectTimeout(5 * 1000);
+        uc.setReadTimeout(5 * 1000);
+        uc.connect();
+        return uc;
+    }
+
+
+    public static InputStream openURLNoProxy(String url0) throws IOException {
+        URLConnection uc = connectURLNoProxy(url0);
+        return uc.getInputStream();
+    }
+
+    public static String readUrlAsTextNoProxy(String url0) throws IOException {
+        try (InputStream is = openURLNoProxy(url0)) {
+            return readText(is);
+        }
     }
 
     /**
@@ -69,6 +96,15 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static boolean isAllEmpty(String... strs) {
+        for (String s : strs) {
+            if (!isEmpty(s)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

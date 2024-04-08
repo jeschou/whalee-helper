@@ -27,7 +27,7 @@
         <notificationGroup id="Update Notification" displayType="BALLOON"/>
     </extensions>
     <applicationListeners>
-        <listener class="cn.whale.helper.listener.UpdateCheckService" topic="com.intellij.ide.AppLifecycleListener"/>
+        <listener class="cn.whale.helper.listener.StartupListener" topic="com.intellij.ide.AppLifecycleListener"/>
     </applicationListeners>
 
 
@@ -133,6 +133,12 @@
         <!--                description="gbl and oss">-->
         <!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
         <!--        </action>-->
+
+        <action id="tsx_tip" class="cn.whale.helper.action.experimental.TsxShowVarValueAction" text="show var value"
+                icon="PluginIcons.PROTOBUF"
+                description="show var value">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
 
     </actions>
 

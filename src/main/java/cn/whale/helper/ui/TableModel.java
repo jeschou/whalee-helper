@@ -80,7 +80,7 @@ public class TableModel extends ReorderableTableModel {
         sb.append("`gorm:\"column:").append(c.name);
         if (c.isPk) {
             if (ctx.isGormV2()) {
-                sb.append(";primaryKey");
+                sb.append(";primaryKey;<-:create"); // not allow update pk
             } else {
                 sb.append(";primary_key");
             }

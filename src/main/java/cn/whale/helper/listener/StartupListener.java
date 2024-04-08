@@ -1,6 +1,8 @@
 package cn.whale.helper.listener;
 
 import cn.whale.helper.utils.CloserHolder;
+import cn.whale.helper.utils.I18nUtil;
+import cn.whale.helper.utils.IconFontUtil;
 import cn.whale.helper.utils.Utils;
 import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
@@ -21,14 +23,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
-import java.net.URL;
 import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public class UpdateCheckService implements AppLifecycleListener {
+public class StartupListener implements AppLifecycleListener {
 
     // the directory where this plugin installed at plugins
     static final String DIR = "whalee-helper";
@@ -48,6 +49,10 @@ public class UpdateCheckService implements AppLifecycleListener {
         });
         t.setDaemon(true);
         t.start();
+        new Thread(() -> {
+            IconFontUtil.initLoad();
+            I18nUtil.initLoad();
+        }).start();
     }
 
     static PluginId pluginId() {
@@ -65,9 +70,8 @@ public class UpdateCheckService implements AppLifecycleListener {
             if (plugin == null) {
                 return;
             }
-            InputStream is = new URL(releaseBase + "latest.txt").openStream();
-            ch.add(is);
-            String text = Utils.readText(is).trim();
+            String releaseText = Utils.readUrlAsTextNoProxy(releaseBase + "latest.txt");
+            String text = releaseText.split("\n")[0].trim();
             @Nullable SemVer newVersion = SemVer.parseFromText(text);
             @Nullable SemVer curVersion = SemVer.parseFromText(plugin.getVersion());
             if (newVersion == null) {
@@ -111,7 +115,7 @@ public class UpdateCheckService implements AppLifecycleListener {
                     progressIndicator.setIndeterminate(false);
                     progressIndicator.setFraction(0);
                     File f = File.createTempFile(DIR, "");
-                    URLConnection uc = new URL(releaseBase + DIR + "-" + version + ".zip").openConnection();
+                    URLConnection uc = Utils.connectURLNoProxy(releaseBase + DIR + "-" + version + ".zip");
                     int length = uc.getContentLength();
                     int downloadedBytes = 0;
                     byte[] buff = new byte[16 * 1024];
@@ -144,7 +148,7 @@ public class UpdateCheckService implements AppLifecycleListener {
 
     static void installUpdate(File f) throws IOException {
 
-        String classLocation = UpdateCheckService.class.getResource(UpdateCheckService.class.getSimpleName() + ".class").getFile();
+        String classLocation = StartupListener.class.getResource(StartupListener.class.getSimpleName() + ".class").getFile();
         String jarPath = Utils.substringAfter(Utils.substringBefore(classLocation, "!"), "file:");
         jarPath = jarPath.replace("%20", " ");
         File pluginsDir = new File(Utils.substringBeforeLast(jarPath, "/" + DIR + "/"));
