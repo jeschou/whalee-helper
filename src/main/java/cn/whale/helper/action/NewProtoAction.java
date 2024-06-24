@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NewProtoAction extends AnAction {
+public class NewProtoAction extends Action0 {
 
     static Notifier notifier = Notifier.getInstance("whgo_helper proto");
 

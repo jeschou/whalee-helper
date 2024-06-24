@@ -9,7 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
-public class NewGormModelAction extends AnAction {
+public class NewGormModelAction extends Action0 {
 
     @Override
     public void update(@NotNull AnActionEvent e) {

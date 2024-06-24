@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class GenGrpcHandlerAction extends AnAction {
+public class GenGrpcHandlerAction extends Action0 {
 
     static Notifier notifier = Notifier.getInstance("whgo_helper gbl");
 

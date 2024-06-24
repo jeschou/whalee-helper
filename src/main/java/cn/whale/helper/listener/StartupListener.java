@@ -1,5 +1,6 @@
 package cn.whale.helper.listener;
 
+import cn.whale.helper.action.Action0;
 import cn.whale.helper.utils.CloserHolder;
 import cn.whale.helper.utils.I18nUtil;
 import cn.whale.helper.utils.IconFontUtil;
@@ -196,7 +197,7 @@ public class StartupListener implements AppLifecycleListener {
         }).start();
     }
 
-    static class DownloadUpdateAction extends AnAction {
+    static class DownloadUpdateAction extends Action0 {
         private final Notification notify;
         String version;
 
@@ -224,7 +225,7 @@ public class StartupListener implements AppLifecycleListener {
         }
     }
 
-    static class RestartIDEAction extends AnAction {
+    static class RestartIDEAction extends Action0 {
 
         public RestartIDEAction(String text) {
             super(text);

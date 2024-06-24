@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TestGinAction extends AnAction {
+public class TestGinAction extends Action0 {
 
     static Notifier notifier = Notifier.getInstance("whgo_helper gbl");
 

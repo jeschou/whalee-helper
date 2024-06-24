@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class UploadProtoAction extends AnAction {
+public class UploadProtoAction extends Action0 {
 
     static Notifier notifier = Notifier.getInstance("whgo_helper proto");
 

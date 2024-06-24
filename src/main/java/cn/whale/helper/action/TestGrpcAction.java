@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 
-public class TestGrpcAction extends AnAction {
+public class TestGrpcAction extends Action0 {
 
     static Notifier notifier = Notifier.getInstance("whgo_helper gbl");
 

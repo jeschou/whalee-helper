@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProtocAction extends AnAction {
+public class ProtocAction extends Action0 {
 
     static Notifier notifier = Notifier.getInstance("whgo_helper protoc");
 

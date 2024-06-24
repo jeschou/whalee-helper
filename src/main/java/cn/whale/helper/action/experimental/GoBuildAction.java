@@ -1,5 +1,6 @@
 package cn.whale.helper.action.experimental;
 
+import cn.whale.helper.action.Action0;
 import cn.whale.helper.ui.Notifier;
 import cn.whale.helper.utils.IDEUtils;
 import cn.whale.helper.utils.Utils;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 
-public class GoBuildAction extends AnAction {
+public class GoBuildAction extends Action0 {
 
     static Notifier notifier = Notifier.getInstance("whgo_helper gbl");
     static boolean enabled = false;

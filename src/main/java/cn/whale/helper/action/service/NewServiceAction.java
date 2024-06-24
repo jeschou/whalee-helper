@@ -1,5 +1,6 @@
 package cn.whale.helper.action.service;
 
+import cn.whale.helper.action.Action0;
 import cn.whale.helper.template.SimpleTemplateRender;
 import cn.whale.helper.ui.Notifier;
 import cn.whale.helper.ui.SimplePopupInput;
@@ -25,7 +26,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NewServiceAction extends AnAction {
+public class NewServiceAction extends Action0 {
 
     static Notifier notifier = Notifier.getInstance("whgo_helper service");
 

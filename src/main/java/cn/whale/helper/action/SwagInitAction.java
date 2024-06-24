@@ -12,7 +12,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-public class SwagInitAction extends AnAction {
+public class SwagInitAction extends Action0 {
 
     static Notifier notifier = Notifier.getInstance("whgo_helper swag");
 

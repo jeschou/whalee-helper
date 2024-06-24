@@ -10,7 +10,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
-public class BazelBuildAction extends AnAction {
+public class BazelBuildAction extends Action0 {
 
     static Notifier notifier = Notifier.getInstance("whgo_helper bazel");
 

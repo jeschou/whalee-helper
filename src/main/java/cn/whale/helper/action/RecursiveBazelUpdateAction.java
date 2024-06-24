@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class RecursiveBazelUpdateAction extends AnAction {
+public class RecursiveBazelUpdateAction extends Action0 {
 
     static Notifier notifier = Notifier.getInstance("whgo_helper bazel");
 

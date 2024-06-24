@@ -1,5 +1,6 @@
 package cn.whale.helper.action.experimental;
 
+import cn.whale.helper.action.Action0;
 import cn.whale.helper.ui.Notifier;
 import cn.whale.helper.utils.I18nUtil;
 import cn.whale.helper.utils.IconFontUtil;
@@ -20,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
-public class TsxShowVarValueAction extends AnAction {
+public class TsxShowVarValueAction extends Action0 {
 
     static Notifier notifier = Notifier.getInstance("whgo_helper tsx");
 
