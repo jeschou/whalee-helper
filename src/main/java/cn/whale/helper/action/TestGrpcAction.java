@@ -4,7 +4,6 @@ import cn.whale.helper.ui.Notifier;
 import cn.whale.helper.utils.IDEUtils;
 import cn.whale.helper.utils.ProtoMeta;
 import cn.whale.helper.utils.Utils;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
@@ -49,7 +48,7 @@ public class TestGrpcAction extends Action0 {
             presentation.setEnabledAndVisible(false);
             throw new RuntimeException(ex);
         }
-        e.getPresentation().setText("test " + rpcSchema.rpcElement.getName());
+        e.getPresentation().setText("test " + rpcSchema.rpcElement.getName() + " (" + getClusterInfo().clusterName + ")");
         e.getPresentation().setEnabledAndVisible(true);
 
     }
@@ -109,6 +108,10 @@ public class TestGrpcAction extends Action0 {
         RpcElement rpcElement;
     }
 
+    protected ClusterInfo getClusterInfo() {
+        return LocalClusterInfo;
+    }
+
     @Override
     public void actionPerformed(AnActionEvent event) {
         Project project = event.getData(PlatformDataKeys.PROJECT);
@@ -120,10 +123,14 @@ public class TestGrpcAction extends Action0 {
         String fullName = rpcSchema.protoFileElement.getPackageName() + "." + rpcSchema.serviceElement.getName() + "/" + rpcSchema.rpcElement.getName();
         String reqType = rpcSchema.rpcElement.getRequestType();
 
+        var clusterInfo = getClusterInfo();
+
         StringBuilder sb = new StringBuilder();
-        sb.append("### ").append(StringUtils.defaultString(rpcSchema.rpcElement.getDocumentation())).append("\n");
-        sb.append("GRPC 127.0.0.1:50051/").append(fullName).append("\n");
-        sb.append("lang: zh-CN\n"); // 暗示用户, 可以通过 header 指定 语言环境
+        sb.append("### ").append(clusterInfo.clusterName).append(" ").append(StringUtils.defaultString(rpcSchema.rpcElement.getDocumentation())).append("\n");
+        sb.append("GRPC " + clusterInfo.addr + "/").append(fullName).append("\n");
+        for (String s : clusterInfo.extraHeader) {
+            sb.append(s).append("\n");
+        }
         sb.append("\n");
         try {
             sb.append(Utils.mapper.writeValueAsString(rpcSchema.protoMeta.toJsonMap(rpcSchema.protoMeta.typeMaps.get(reqType))));
@@ -143,4 +150,18 @@ public class TestGrpcAction extends Action0 {
             throw new RuntimeException(e);
         }
     }
+
+    protected static class ClusterInfo {
+        String clusterName;
+        String addr;
+        String[] extraHeader;
+
+        public ClusterInfo(String clusterName, String addr, String[] extraHeader) {
+            this.extraHeader = extraHeader;
+            this.addr = addr;
+            this.clusterName = clusterName;
+        }
+    }
+
+    static ClusterInfo LocalClusterInfo = new ClusterInfo("local", "127.0.0.1:50051", new String[]{"lang: zh-CN"});
 }

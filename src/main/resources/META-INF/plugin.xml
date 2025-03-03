@@ -43,35 +43,35 @@
                 description="Create gorm repo v2 from database table">
             <add-to-group group-id="NewGroup" anchor="last"/>
         </action>
-        <action id="NewGormModelAction" class="cn.whale.helper.action.NewGormModelAction" text="New Gorm Repo"
-                icon="PluginIcons.REPO"
-                description="Create gorm repo from database table">
-            <add-to-group group-id="NewGroup" anchor="last"/>
-        </action>
+<!--        <action id="NewGormModelAction" class="cn.whale.helper.action.NewGormModelAction" text="New Gorm Repo"-->
+<!--                icon="PluginIcons.REPO"-->
+<!--                description="Create gorm repo from database table">-->
+<!--            <add-to-group group-id="NewGroup" anchor="last"/>-->
+<!--        </action>-->
         <action id="NewProtoAction" class="cn.whale.helper.action.NewProtoAction" text="New Proto"
                 icon="PluginIcons.PROTOBUF"
                 description="Create new proto file">
             <add-to-group group-id="NewGroup" anchor="last"/>
         </action>
-        <action id="BazelGenAction" class="cn.whale.helper.action.BazelUpdateAction" text="Update BUILD.bazel"
-                icon="PluginIcons.BAZEL"
-                description="BazelGenAction desc">
-            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
-            <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>
-        </action>
-        <action id="RecursiveBazelGenAction" class="cn.whale.helper.action.RecursiveBazelUpdateAction"
-                text="Recursive Update BUILD.bazel"
-                icon="PluginIcons.BAZEL"
-                description="BazelGenAction desc">
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
-        </action>
-        <action id="BazelBuildAction_popup2" class="cn.whale.helper.action.BazelBuildAction" text="bazel build"
-                icon="PluginIcons.BAZEL"
-                description="execute bazel build">
-            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
-        </action>
+<!--        <action id="BazelGenAction" class="cn.whale.helper.action.BazelUpdateAction" text="Update BUILD.bazel"-->
+<!--                icon="PluginIcons.BAZEL"-->
+<!--                description="BazelGenAction desc">-->
+<!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+<!--            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>-->
+<!--            <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>-->
+<!--        </action>-->
+<!--        <action id="RecursiveBazelGenAction" class="cn.whale.helper.action.RecursiveBazelUpdateAction"-->
+<!--                text="Recursive Update BUILD.bazel"-->
+<!--                icon="PluginIcons.BAZEL"-->
+<!--                description="BazelGenAction desc">-->
+<!--            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>-->
+<!--        </action>-->
+<!--        <action id="BazelBuildAction_popup2" class="cn.whale.helper.action.BazelBuildAction" text="bazel build"-->
+<!--                icon="PluginIcons.BAZEL"-->
+<!--                description="execute bazel build">-->
+<!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+<!--            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>-->
+<!--        </action>-->
 
         <action id="whgo.generate.proto.action3" class="cn.whale.helper.action.ProtocAction" text="Protoc"
                 icon="PluginIcons.PROTOBUF"
@@ -80,7 +80,31 @@
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
 
-        <action id="test_grpc" class="cn.whale.helper.action.TestGrpcAction" text="test grpc"
+        <action id="test_grpc_local" class="cn.whale.helper.action.TestGrpcAction" text="test grpc"
+                icon="PluginIcons.PROTOBUF"
+                description="test grpc">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
+        <action id="test_grpc_dev" class="cn.whale.helper.action.TestDevGrpcAction" text="test grpc"
+                icon="PluginIcons.PROTOBUF"
+                description="test grpc">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
+        <action id="test_grpc_stage" class="cn.whale.helper.action.TestStageGrpcAction" text="test grpc"
+                icon="PluginIcons.PROTOBUF"
+                description="test grpc">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
+        <action id="test_grpc_prod" class="cn.whale.helper.action.TestProdGrpcAction" text="test grpc"
+                icon="PluginIcons.PROTOBUF"
+                description="test grpc">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
+        <action id="test_grpc_openplatform" class="cn.whale.helper.action.TestOpenplatformGrpcAction" text="test grpc"
                 icon="PluginIcons.PROTOBUF"
                 description="test grpc">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
@@ -142,4 +166,7 @@
 
     </actions>
 
+    <extensions defaultExtensionNs="com.intellij">
+        <qualifiedNameProvider implementation="cn.whale.helper.action.GoQualifiedNameProvider"/>
+    </extensions>
 </idea-plugin>

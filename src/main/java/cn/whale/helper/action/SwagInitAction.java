@@ -3,7 +3,6 @@ package cn.whale.helper.action;
 import cn.whale.helper.ui.Notifier;
 import cn.whale.helper.utils.IDEUtils;
 import cn.whale.helper.utils.Utils;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
@@ -55,9 +54,9 @@ public class SwagInitAction extends Action0 {
         String cmd = "swag init";
         if (virtualFile.getPath().contains("whale-bapi-server")) {
             cmd = "swag init --exclude=./controllers/jingyingbao --output=./docs";
-        } else if (virtualFile.getPath().contains("whale-agi")) {
+        } /*else if (virtualFile.getPath().contains("whale-agi")) {
             cmd = "swag init --pd";
-        }
+        }*/
         VirtualFile moduleRoot = IDEUtils.getModuleRoot(virtualFile);
         if (moduleRoot == null) {
             notifier.error(project, "invalid file path:" + virtualFile.getPath());

@@ -27,6 +27,7 @@ public class TableModel extends ReorderableTableModel {
                 new ColumnConfig("FieldName", "fieldName", 150, String.class, true),
                 new ColumnConfig("GoType", "goType", 75, String.class, true),
                 new ColumnConfig("Tag", "tag", 0, String.class, true),
+                new ColumnConfig("Comment", "comment", 0, String.class, true),
         };
         columnVector = new Vector();
         for (int i = 0; i < tableColumns.length; i++) {
@@ -64,6 +65,7 @@ public class TableModel extends ReorderableTableModel {
             rd.fieldName = Utils.toTitleCamelCase(c.name);
             rd.goType = ctx.isGormV2() ? DB.pgToGoTypeV2(c.typeName) : DB.pgToGoType(c.typeName);
             rd.tag = createTag(c);
+            rd.comment = c.comment;
             rowDataList.add(rd);
             Vector vectorRow = new Vector();
             for (int i = 0; i < tableColumns.length; i++) {
@@ -96,6 +98,9 @@ public class TableModel extends ReorderableTableModel {
             sb.append(";type:").append(c.typeName.substring(1)).append("[]");
         } else if (c.typeName.equalsIgnoreCase("numeric")) {
             sb.append(";type:").append(c.typeName).append("(").append(c.size).append(",").append(c.precision).append(")");
+        }
+        if (!Utils.isEmpty(c.defaultVal)) {
+            sb.append(";default:").append(c.defaultVal);
         }
         if (ctx.isGormV2()) {
             // only create index tag for gorm v2 (v1 can not guarantee index field order)

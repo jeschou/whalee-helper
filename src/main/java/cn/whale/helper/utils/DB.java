@@ -175,6 +175,7 @@ public class DB {
                 col.comment = rs0.getString("REMARKS");
                 col.size = rs0.getInt("COLUMN_SIZE");
                 col.precision = rs0.getInt("DECIMAL_DIGITS");
+                col.defaultVal = rs0.getString("COLUMN_DEF");
                 list.add(col);
             });
             rs = conn.getMetaData().getPrimaryKeys(null, table.schema, table.tableName);
@@ -272,6 +273,7 @@ public class DB {
 
         public int size;
         public int precision;
+        public String defaultVal;
 
 
         @Override
@@ -282,6 +284,7 @@ public class DB {
                     ", typeName='" + typeName + '\'' +
                     ", isPk=" + isPk +
                     ", comment='" + comment + '\'' +
+                    ", defaultVal='" + defaultVal + '\'' +
                     '}';
         }
     }

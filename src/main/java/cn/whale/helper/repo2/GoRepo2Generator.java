@@ -103,7 +103,13 @@ public class GoRepo2Generator {
 
         StringBuilder fieldsSb = new StringBuilder();
         for (TableRowData trd : fields) {
-            fieldsSb.append("\t").append(String.format("%-" + maxFieldWidth + "s %-" + maxTypeWidth + "s %s", trd.fieldName, trd.goType, trd.tag)).append("\n");
+            String comment = trd.comment;
+            if (Utils.isEmpty(comment)) {
+                comment = "";
+            } else {
+                comment = " // " + comment;
+            }
+            fieldsSb.append("\t").append(String.format("%-" + maxFieldWidth + "s %-" + maxTypeWidth + "s %s%s", trd.fieldName, trd.goType, trd.tag, comment)).append("\n");
         }
         if (fieldsSb.length() > 0) {
             fieldsSb.deleteCharAt(fieldsSb.length() - 1);

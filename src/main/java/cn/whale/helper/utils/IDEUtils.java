@@ -119,9 +119,9 @@ public class IDEUtils {
 
     private static void execute(TerminalOutputStream terminalOutputStream, String workingDir, String cmd) {
         if (!"".equals(workingDir) && !".".equals(workingDir)) {
-            terminalOutputStream.sendString("cd " + workingDir + "\n");
+            terminalOutputStream.sendString("cd " + workingDir + "\n", true);
         }
-        terminalOutputStream.sendString(cmd + "\n");
+        terminalOutputStream.sendString(cmd + "\n", true);
     }
 
     public static void createVirtualFile(Project project, VirtualFile dir, String fileName, String content) {
@@ -183,7 +183,7 @@ public class IDEUtils {
     }
 
     public static void refreshExternalChanges(VirtualFile dir) {
-        dir.refresh(true,true);
+        dir.refresh(true, true);
         RefreshQueue.getInstance().refresh(true, true, null, dir);
     }
 
